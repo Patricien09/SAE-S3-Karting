@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="Untitled Gantt Project" company="" webLink="http://" view-date="2022-08-01" view-index="0" gantt-divider-location="351" resource-divider-location="300" version="3.2.3246" locale="fr_FR">
+<?xml version="1.0" encoding="UTF-8"?><project name="Untitled Gantt Project" company="" webLink="http://" view-date="2022-08-01" view-index="1" gantt-divider-location="351" resource-divider-location="300" version="3.2.3246" locale="fr_FR">
     <description/>
     <view zooming-state="default:7" id="gantt-chart">
         <field id="tpd3" name="Nom" width="200" order="0"/>
@@ -7,8 +7,8 @@
         <option id="filter.completedTasks" value="false"/>
     </view>
     <view id="resource-table">
-        <field id="0" name="Nom" width="210" order="0"/>
-        <field id="1" name="Rôle par défaut" width="86" order="1"/>
+        <field id="0" name="Nom" width="199" order="0"/>
+        <field id="1" name="Rôle par défaut" width="82" order="1"/>
     </view>
     <!-- -->
     <calendars>
@@ -63,7 +63,7 @@
             </task>
             <task id="11" name="CDC Intermédiaire" color="#8cb6ce" meeting="true" start="2022-10-07" duration="0" complete="0" thirdDate="2022-08-29" thirdDate-constraint="0" expand="true"/>
         </task>
-        <task id="12" name="Phase de conception" meeting="false" start="2022-10-07" duration="20" complete="0" expand="true">
+        <task id="12" name="Phase de conception" color="#000000" meeting="false" start="2022-10-07" duration="20" complete="0" thirdDate="2022-10-07" thirdDate-constraint="0" expand="true">
             <depend id="18" type="2" difference="0" hardness="Strong"/>
             <task id="13" name="Spécifications techniques" color="#8cb6ce" meeting="false" start="2022-10-07" duration="20" complete="0" thirdDate="2022-09-12" thirdDate-constraint="0" expand="true">
                 <depend id="17" type="2" difference="0" hardness="Strong"/>
@@ -98,8 +98,28 @@
             <task id="26" name="Rapport prog + code source appli" color="#8cb6ce" meeting="true" start="2023-01-18" duration="0" complete="0" thirdDate="2022-12-16" thirdDate-constraint="0" expand="true"/>
         </task>
     </tasks>
-    <resources/>
-    <allocations/>
+    <resources>
+        <resource id="0" name="Rouillon Tom" function="Default:0" contacts="" phone=""/>
+        <resource id="1" name="Wittmann Gregory" function="Default:0" contacts="" phone=""/>
+    </resources>
+    <allocations>
+        <allocation task-id="13" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="15" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="17" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="19" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="21" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="23" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="25" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="26" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="14" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="16" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="17" resource-id="1" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="19" resource-id="1" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="20" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="21" resource-id="1" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="24" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="26" resource-id="1" function="Default:0" responsible="false" load="100.0"/>
+    </allocations>
     <vacations/>
     <previous/>
     <roles roleset-name="Default"/>
