@@ -1,0 +1,74 @@
+:root {
+    --backColor:rgba(22, 22, 22, 0.773);
+    --footColor:#343a40;
+}
+
+header{
+    display: flex;
+    height: 90px;
+    margin: 0;
+    background-color: var(--footColor);
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(255, 191, 0);
+}
+
+.header p{
+    text-align: center;
+    color: black;
+    text-decoration: none;
+}
+
+.header a{
+    text-decoration: none;
+    padding: 6px;
+    text-decoration: none;
+    display: block;
+    width: 100px;
+    height: 40px;
+    line-height: 20px;
+    font-size: 15px;
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+    border: 2px solid rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
+    letter-spacing: 0px;
+    text-align: center;
+    position: relative;
+    transition: all .35s;
+}
+.header a:after{
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: rgba(0, 5, 78, 0.353);
+    transition: all .25s;
+}
+
+.header a:hover{
+    color: rgb(0, 0, 0);
+}
+
+.header a:hover:after{
+    width: 100%;
+}
+
+.wrapper{
+    position: relative;
+    display: flex;
+    flex-direction: auto;
+    margin-top: 43px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.logo{
+    margin-left: 10px;
+    margin-top: 10px;
+    width: 100px;
+    height: 100px;
+}

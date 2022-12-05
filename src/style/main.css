@@ -1,0 +1,35 @@
+:root {
+    --backColor:rgba(22, 22, 22, 0.773);
+    --footColor:#343a40;
+}
+
+nav{
+    margin:auto;
+    margin-right:100px;
+}
+
+body {
+    font-family: 'Share Tech', sans-serif;
+    font-size: 10px;
+    color: white;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    text-shadow: 8px 8px 10px #0000008c;
+    background-color: #343a40;
+    background-image: url("https://www.toptal.com/designers/subtlepatterns/uploads/blackmamba.png");
+}
+
+
+h1{
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+body section{
+    margin: 226px;
+    height: 300px;
+}
