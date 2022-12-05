@@ -9,24 +9,24 @@
 <header>
     
     <h1 class="logo">
-        <img src="logos/Fesse.png" width="65" height="65">
+        <a href="accueil.php"><img src="logos/Fesse.png" width="65" height="65"></a>
     </h1>
 
     <nav class="header">
         <p> 
             <div class="wrapper">
-                <a href="accueil.php">Accueil</a>
-                <a href="event.php">Evenements</a>
-                <a href="information.php">Informations</a>
-                <a href="multi.php">Multimédia</a>
+                <a class="button" href="accueil.php">Accueil</a>
+                <a class="button" href="event.php">Evenements</a>
+                <a class="button" href="information.php">Informations</a>
+                <a class="button" href="multi.php">Multimédia</a>
 
-                <a href="partenaire.php">Partenaires</a>
-                <a href="boutique.php">Boutique</a>
+                <a class="button" href="partenaire.php">Partenaires</a>
+                <a class="button" href="boutique.php">Boutique</a>
                 
                 
 
-                <a href="inscription.php">Inscription</a>
-                <a href="connexion.php">Connexion</a>
+                <a class="button" href="inscription.php">Inscription</a>
+                <a class="button" href="connexion.php">Connexion</a>
             </div>
         </p>
     </nav>
