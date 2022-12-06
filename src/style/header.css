@@ -1,0 +1,37 @@
+:root {
+    --backColor:rgba(22, 22, 22, 0.773);
+    --footColor:#343a40;
+}
+
+header{
+    display: flex;
+    height: 90px;
+    margin: 0;
+    background-color: var(--footColor);
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(255, 191, 0);
+}
+
+.header p{
+    text-align: center;
+    color: black;
+    text-decoration: none;
+}
+
+.wrapper{
+    position: relative;
+    display: flex;
+    flex-direction: auto;
+    margin-top: 43px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.logo{
+    margin-left: 10px;
+    margin-top: 10px;
+    width: 100px;
+    height: 100px;
+}
