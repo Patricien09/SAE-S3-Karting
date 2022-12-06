@@ -4,7 +4,7 @@
 }
 
 header nav{
-    margin:auto;
+    margin-top: -119px;
     margin-right: 20px;
 }
 
@@ -65,7 +65,7 @@ header{
     position: relative;
     display: flex;
     flex-direction: auto;
-    margin-top: 43px;
+    margin-top: 60px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
