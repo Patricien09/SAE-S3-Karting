@@ -1,15 +1,39 @@
 :root {
-    --footColor:#343a40;
+    --footColor:rgba(75, 75, 76, 0.53);
+}
+
+p{
+    font-size: 10px;
+    margin-top: 180px;
+    margin-left: 600px;
+    text-align: center;
+
 }
 
 footer nav {
     margin:auto;
-    margin-right:100px;
+    margin-right:20px;
     display: flex;
 }
 
+footer .roundBtn{
+    margin-left: 15px;
+    text-align: center;
+    padding: 3px;
+    display: block;
+    width: 31px;
+    height: 30px;
+    line-height: 20px;
+    font-size: 15px;
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+    border: 2px solid rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
+    border-radius: 50px;
+}
+
 footer{
-    height: 100px;
+    height: 200px;
     background-color: var(--footColor);
     color: rgb(255, 191, 0);
     padding-top: 0px;
@@ -18,3 +42,5 @@ footer{
     border-style: solid;
     display: flex;
 }
+
+

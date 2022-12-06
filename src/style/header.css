@@ -1,6 +1,11 @@
 :root {
     --backColor:rgba(22, 22, 22, 0.773);
-    --footColor:#343a40;
+    --footColor:rgba(75, 75, 76, 0.53);
+}
+
+header nav{
+    margin:auto;
+    margin-right: 20px;
 }
 
 header{
@@ -11,6 +16,43 @@ header{
     border-width: 1px;
     border-style: solid;
     border-color: rgb(255, 191, 0);
+}
+
+.button {
+    text-decoration: none;
+    padding: 3px;
+    display: block;
+    width: 100px;
+    height: 30px;
+    line-height: 20px;
+    font-size: 15px;
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+    border: 2px solid rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
+    letter-spacing: 0px;
+    text-align: center;
+    position: relative;
+    transition: all .35s;
+}
+
+.button:after{
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: rgba(0, 5, 78, 0.353);
+    transition: all .25s;
+}
+
+.button:hover{
+    color: rgb(0, 0, 0);
+}
+
+.button:hover:after{
+    width: 100%;
 }
 
 .header p{
