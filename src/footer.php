@@ -11,8 +11,8 @@
     </p>
 
     <nav class="footer">
-        <a class="button" href="contacts.php">Contact</a>
-        <a class="button" href="aPropos.php">A propos</a>
+        <a class="button" href="contacts.php"><b>Contact</b></a>
+        <a class="button" href="aPropos.php"><b>A propos</b></a>
         <a class="roundBtn" href="#">↑</a>
     </nav>
 

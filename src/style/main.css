@@ -3,28 +3,25 @@
     --footColor:#343a40;
 }
 
-@media only screen and (min-width: 600px) {
+body {
+    font-family: 'Share Tech', sans-serif;
+    font-size: 15px;
+    color: white;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    width: auto;
+    height: auto;
+    background-image: url("https://www.toptal.com/designers/subtlepatterns/uploads/blackmamba.png");
+}
 
-    body {
-        font-family: 'Share Tech', sans-serif;
-        font-size: 15px;
-        color: white;
-        display: block;
-        justify-content: center;
-        align-items: center;
-        margin: 0;
-        width: auto;
-        height: auto;
-        background-image: url("https://www.toptal.com/designers/subtlepatterns/uploads/blackmamba.png");
-    }
+h1{
+    margin-left: 10px;
+    margin-top: 10px;
+}
 
-    h1{
-        margin-left: 10px;
-        margin-top: 10px;
-    }
-
-    body #contenu{
-        min-height: 100vh;  
-        margin: 15px;
-    }
+body #contenu{
+    min-height: 100vh;  
+    margin: 15px;
 }
