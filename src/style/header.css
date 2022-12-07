@@ -53,6 +53,7 @@ header h1 {
     margin: auto;
     margin-left: 10px;
     font-size: min(20px);
+    color: rgb(255, 255, 255);
 }
 
 header{

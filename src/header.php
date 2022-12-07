@@ -19,10 +19,10 @@
     <nav>
         <div class="wrapper">
             <ul class="list-unstyled">
-                <li><a class="button1" href="event.php"><b>Evenements</b></a></li>
+                <li><a class="button1" href="accueil.php"><b>Accueil</b></a></li>
                 <li><a class="button1" href="information.php"><b>Informations</b></a></li>
                 <li><a class="button1" href="multi.php"><b>Multimédia</b></a></li>
-                <li><a class="button1" href="accueil.php"><b>Accueil</b></a></li>
+                <li><a class="button1" href="event.php"><b>Evenements</b></a></li>
 
                 <li><a class="button1" href="partenaire.php"><b>Partenaires</b></a></li>
                 <li><a class="button1" href="boutique.php"><b>Boutique</b></a></li>
