@@ -19,6 +19,10 @@ public class Circuit {
         this.nbrMaxPlace = nbrMaxPlace;
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
     public String toString() {
         return (name + ", " + adresse + ", " + nbrMaxPlace + " places");

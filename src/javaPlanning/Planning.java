@@ -38,7 +38,7 @@ public class Planning {
      * @param heureFin   la nouvelle heure de fin du match
      */
     public void deplacerMatch(Match match, String date, String heureDebut, String heureFin) throws WrongTimeException {
-        if (verifierDispo(new Match(date, heureDebut, heureFin, null))) {
+        if (verifierDispo(new Match(date, heureDebut, heureFin, match.getCircuit()))) {
             match.setDate(date);
             match.setHeureDeb(heureDebut);
             match.setHeureFin(heureFin);
@@ -57,19 +57,31 @@ public class Planning {
         // Comme l'heure est au format hh:mm, on peut la split en 2
         // chechHourDeb[0] representera l'heure et checkHourDeb[1] les minutes
         String[] checkHourDeb = match.getHeureDeb().split(":");
+        String[] checkHourFin = match.getHeureFin().split(":");
+
         for (Match m : matchs) {
             String[] checkHourDeb2 = m.getHeureDeb().split(":");
             String[] checkHourFin2 = m.getHeureFin().split(":");
-            if (m.getDate().equals(match.getDate())) {
-                // Check si l'heure de debut du match est comprise entre l'heure de debut et de
-                // fin d'un autre match
-                // Si c'est le cas on renvoie false
-                if (Integer.parseInt(checkHourDeb[0]) >= Integer.parseInt(checkHourDeb2[0])
-                        && Integer.parseInt(checkHourDeb[1]) >= Integer.parseInt(checkHourDeb2[1])
-                        && Integer.parseInt(checkHourDeb[0]) <= Integer.parseInt(checkHourFin2[0])
-                        && Integer.parseInt(checkHourDeb[1]) <= Integer.parseInt(checkHourFin2[1])) {
-                    return false;
-                }
+
+            // Si ce n'est pas la meme date, on passe au match suivant
+            if (!m.getDate().equals(match.getDate())) {
+                continue;
+            }
+
+            // Si ce n'est pas sur le meme circuit, on passe au match suivant
+            if (!m.getCircuit().equals(match.getCircuit())) {
+                continue;
+            }
+
+            // Verifie si l'heure de debut du match est comprise entre l'heure de debut et de fin d'un autre match
+            // Verifie aussi les minutes, renvoie false si c'est le cas
+            if ((Integer.parseInt(checkHourDeb[0]) > Integer.parseInt(checkHourDeb2[0])
+                    && Integer.parseInt(checkHourDeb[0]) < Integer.parseInt(checkHourFin2[0]))
+                    || (Integer.parseInt(checkHourDeb[0]) == Integer.parseInt(checkHourDeb2[0])
+                            && Integer.parseInt(checkHourDeb[1]) >= Integer.parseInt(checkHourDeb2[1]))
+                    || (Integer.parseInt(checkHourDeb[0]) == Integer.parseInt(checkHourFin2[0])
+                            && Integer.parseInt(checkHourDeb[1]) <= Integer.parseInt(checkHourFin2[1]))) {
+                return false;
             }
         }
         // Si on arrive ici, c'est que le match peut etre ajoute

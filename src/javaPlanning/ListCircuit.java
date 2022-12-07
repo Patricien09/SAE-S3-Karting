@@ -30,4 +30,13 @@ public class ListCircuit {
             getInstance().add(circuit);
         }
     }
+
+    public static Circuit getCircuit(String nom) throws CircuitExistException {
+        for (Circuit circuit : getInstance()) {
+            if (circuit.getName().equals(nom)) {
+                return circuit;
+            }
+        }
+        throw new CircuitExistException("Circuit inexistant");
+    }
 }
