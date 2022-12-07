@@ -4,30 +4,32 @@
     function login(){
         $("#loginModal").modal('show');
     }
-    
 </script>
+
+<script type="text/javascript" src="script/burgermenu.js"></script>
+
 <header>
     
-    <h1 class="logo">
-        <a href="accueil.php"><img src="logos/kart.jpg" width="65" height="65"></a>
-    </h1>
+    <a href="accueil.php" class="logo"><img src="logos/kart.jpg"></a>
 
     <h1> Notre Club De Karting </h1>
 
-    <nav class="header">
+    <div onclick="menu();"><span id="burger"></span></div> 
+
+    <nav>
         <div class="wrapper">
-            <a class="button" href="accueil.php"><b>Accueil</b></a>
-            <a class="button" href="event.php"><b>Evenements</b></a>
-            <a class="button" href="information.php"><b>Informations</b></a>
-            <a class="button" href="multi.php"><b>Multimédia</b></a>
+            <ul class="list-unstyled">
+                <li><a class="button1" href="event.php"><b>Evenements</b></a></li>
+                <li><a class="button1" href="information.php"><b>Informations</b></a></li>
+                <li><a class="button1" href="multi.php"><b>Multimédia</b></a></li>
+                <li><a class="button1" href="accueil.php"><b>Accueil</b></a></li>
 
-            <a class="button" href="partenaire.php"><b>Partenaires</b></a>
-            <a class="button" href="boutique.php"><b>Boutique</b></a>
-            
-            
-
-            <a class="button" href="inscription.php"><b>Inscription</b></a>
-            <a class="button" href="connexion.php"><b>Connexion</b></a>
+                <li><a class="button1" href="partenaire.php"><b>Partenaires</b></a></li>
+                <li><a class="button1" href="boutique.php"><b>Boutique</b></a></li>
+                
+                <li><a class="button1" href="inscription.php"><b>Inscription</b></a></li>
+                <li><a class="button1" href="connexion.php"><b>Connexion</b></a></li>
+            </ul>
         </div>
     </nav>
 </header>

@@ -23,10 +23,8 @@ footer nav {
 }
 
 footer .roundBtn{
-    margin-left: 15px;
     text-align: center;
     padding: 3px;
-    display: block;
     width: 31px;
     height: 30px;
     line-height: 20px;
