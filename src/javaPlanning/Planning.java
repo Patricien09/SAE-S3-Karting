@@ -1,6 +1,11 @@
 package javaPlanning;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+import com.mysql.cj.xdevapi.Collection;
+
 import javaPlanning.exceptions.WrongTimeException;
 
 public class Planning {
@@ -23,6 +28,7 @@ public class Planning {
      * @param match le match a ajouter
      */
     public void ajouterMatch(Match match) throws WrongTimeException {
+        // On verifie d'abord la disponibilite de l'heure, du circuit, et de la date
         if (verifierDispo(match)) {
             matchs.add(match);
         } else {
@@ -39,11 +45,16 @@ public class Planning {
      * @param heureFin   la nouvelle heure de fin du match
      */
     public void deplacerMatch(Match match, String date, String heureDebut, String heureFin) throws WrongTimeException {
+        // Recopie le match dans une variable tampon
+        Match tmp = new Match(match.getDate(), match.getHeureDeb(), match.getHeureFin(), match.getCircuit());
+        supprimerMatch(match);
         if (verifierDispo(new Match(date, heureDebut, heureFin, match.getCircuit()))) {
             match.setDate(date);
             match.setHeureDeb(heureDebut);
             match.setHeureFin(heureFin);
         } else {
+            // Si on ne peut pas le deplacer, on remet le match dans la liste
+            matchs.add(tmp);
             throw new WrongTimeException("Le match ne peut pas etre deplacé à cause de la date ou de l'heure");
         }
     }
@@ -107,7 +118,28 @@ public class Planning {
         matchs.remove(match);
     }
 
+    /**
+     * Affiche le planning, avec chaque match sur une ligne
+     * Un match est affiche selon le format : date/heureDebut-heureFin/nombreNecessaire/Circuit
+     */
     public void afficherPlanning() {
+        // Trie les matchs en fonction de la date et de l'heure, puis des minutes
+        Collections.sort(matchs, new Comparator<Match>() {
+            @Override
+            public int compare(Match m1, Match m2) {
+                if (m1.getDate().equals(m2.getDate())) {
+                    String[] checkHourDeb1 = m1.getHeureDeb().split(":");
+                    String[] checkHourDeb2 = m2.getHeureDeb().split(":");
+                    if (Integer.parseInt(checkHourDeb1[0]) == Integer.parseInt(checkHourDeb2[0])) {
+                        return Integer.compare(Integer.parseInt(checkHourDeb1[1]), Integer.parseInt(checkHourDeb2[1]));
+                    } else {
+                        return Integer.compare(Integer.parseInt(checkHourDeb1[0]), Integer.parseInt(checkHourDeb2[0]));
+                    }
+                } else {
+                    return m1.getDate().compareTo(m2.getDate());
+                }
+            }
+        });
         for (Match m : matchs) {
             System.out.println(m);
         }
