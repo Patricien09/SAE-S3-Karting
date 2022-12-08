@@ -5,6 +5,7 @@ import javaPlanning.exceptions.WrongTimeException;
 
 public class Planning {
 
+    // TODO : Trier liste par date et heure
     private ArrayList<Match> matchs;
 
     /**
@@ -73,14 +74,23 @@ public class Planning {
                 continue;
             }
 
-            // Verifie si l'heure de debut du match est comprise entre l'heure de debut et de fin d'un autre match
+            // Verifie si l'heure de debut du match est comprise entre l'heure de debut et
+            // de fin d'un autre match
+            // Verifie aussi que l'heure de fin du match est comprise entre l'heure de debut
+            // et de fin d'un autre match
             // Verifie aussi les minutes, renvoie false si c'est le cas
             if ((Integer.parseInt(checkHourDeb[0]) > Integer.parseInt(checkHourDeb2[0])
                     && Integer.parseInt(checkHourDeb[0]) < Integer.parseInt(checkHourFin2[0]))
                     || (Integer.parseInt(checkHourDeb[0]) == Integer.parseInt(checkHourDeb2[0])
                             && Integer.parseInt(checkHourDeb[1]) >= Integer.parseInt(checkHourDeb2[1]))
                     || (Integer.parseInt(checkHourDeb[0]) == Integer.parseInt(checkHourFin2[0])
-                            && Integer.parseInt(checkHourDeb[1]) <= Integer.parseInt(checkHourFin2[1]))) {
+                            && Integer.parseInt(checkHourDeb[1]) <= Integer.parseInt(checkHourFin2[1]))
+                    || (Integer.parseInt(checkHourFin[0]) > Integer.parseInt(checkHourDeb2[0])
+                            && Integer.parseInt(checkHourFin[0]) < Integer.parseInt(checkHourFin2[0]))
+                    || (Integer.parseInt(checkHourFin[0]) == Integer.parseInt(checkHourDeb2[0])
+                            && Integer.parseInt(checkHourFin[1]) >= Integer.parseInt(checkHourDeb2[1]))
+                    || (Integer.parseInt(checkHourFin[0]) == Integer.parseInt(checkHourFin2[0])
+                            && Integer.parseInt(checkHourFin[1]) <= Integer.parseInt(checkHourFin2[1]))) {
                 return false;
             }
         }

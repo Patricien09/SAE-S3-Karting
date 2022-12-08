@@ -14,7 +14,8 @@ public class TestPlanning {
     static Planning test;
     static Match match1;
     static Match match2;
-
+    static Match match3;
+    
     @BeforeAll
     public static void init() {
 
@@ -27,6 +28,7 @@ public class TestPlanning {
             test.ajouterMatch(new Match("01/01/2020", "10:00", "12:00", ListCircuit.getCircuit("Monza")));
             match1 = new Match("01/01/2020", "12:01", "14:00", ListCircuit.getCircuit("Monza"));
             match2 = new Match("02/01/2020", "12:01", "14:00", ListCircuit.getCircuit("Monza"));
+            match3 = new Match("02/01/2020", "16:01", "17:00", ListCircuit.getCircuit("Monza"));
         } catch (CircuitExistException e1) {
             System.out.println(e1.getMessage());
         } catch (WrongTimeException e2) {
@@ -122,6 +124,32 @@ public class TestPlanning {
     public void testMoveMatchWrong() {
         Assertions.assertThrows(WrongTimeException.class, () -> {
             test.deplacerMatch(match1, "01/01/2020", "11:00", "15:00");
+        });
+    }
+
+    /**
+     * Test l'ajout d'un match entre deux autres matchs dans le cas ou tout est bon
+     */
+    @Test
+    public void testInsertMatchBetween(){
+        Assertions.assertDoesNotThrow(() -> {
+            test.ajouterMatch(match3);
+        });
+        Assertions.assertDoesNotThrow(() -> {
+            test.ajouterMatch(new Match("02/01/2020", "14:01", "16:00", ListCircuit.getCircuit("Monza")));
+        });
+    }
+
+    /**
+     * Test l'ajout d'un match entre deux autres matchs dans le cas un match est deja present
+     */
+    @Test
+    public void testInsertMatchBetweenWrong(){
+        Assertions.assertDoesNotThrow(() -> {
+            test.ajouterMatch(match3);
+        });
+        Assertions.assertThrows(WrongTimeException.class ,() -> {
+            test.ajouterMatch(new Match("02/01/2020", "14:01", "16:05", ListCircuit.getCircuit("Monza")));
         });
     }
 }
