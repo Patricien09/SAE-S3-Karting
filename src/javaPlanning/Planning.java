@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import com.mysql.cj.xdevapi.Collection;
-
 import javaPlanning.exceptions.WrongTimeException;
 
 public class Planning {
@@ -46,9 +44,9 @@ public class Planning {
      */
     public void deplacerMatch(Match match, String date, String heureDebut, String heureFin) throws WrongTimeException {
         // Recopie le match dans une variable tampon
-        Match tmp = new Match(match.getDate(), match.getHeureDeb(), match.getHeureFin(), match.getCircuit());
+        Match tmp = new Match(match.getDate(), match.getHeureDeb(), match.getHeureFin(), match.getCircuit(), match.getNbJoueursMax());
         supprimerMatch(match);
-        if (verifierDispo(new Match(date, heureDebut, heureFin, match.getCircuit()))) {
+        if (verifierDispo(new Match(date, heureDebut, heureFin, match.getCircuit(), match.getNbJoueursMax()))) {
             match.setDate(date);
             match.setHeureDeb(heureDebut);
             match.setHeureFin(heureFin);
@@ -123,7 +121,16 @@ public class Planning {
      * Un match est affiche selon le format : date/heureDebut-heureFin/nombreNecessaire/Circuit
      */
     public void afficherPlanning() {
-        // Trie les matchs en fonction de la date et de l'heure, puis des minutes
+        sortPlanning();
+        for (Match m : matchs) {
+            System.out.println(m);
+        }
+    }
+
+    /**
+     * Trie le planning selon la date et l'heure de debut, ainsi que les minutes
+     */
+    public void sortPlanning() {
         Collections.sort(matchs, new Comparator<Match>() {
             @Override
             public int compare(Match m1, Match m2) {
@@ -140,9 +147,10 @@ public class Planning {
                 }
             }
         });
-        for (Match m : matchs) {
-            System.out.println(m);
-        }
+    }
+
+    public ArrayList<Match> getMatchs() {
+        return matchs;
     }
 
 }

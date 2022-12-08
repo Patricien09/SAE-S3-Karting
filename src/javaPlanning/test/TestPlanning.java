@@ -31,11 +31,11 @@ public class TestPlanning {
             ListCircuit.addCircuit(new Circuit("Monza", "Viale di Vedano 5", 500));
             ListCircuit.addCircuit(new Circuit("Silverstone", "Silverstone", 1000));
             ListCircuit.addCircuit(new Circuit("Monaco", "38 Quai Jean Charles Rey", 100));
-            test.ajouterMatch(new Match("01/01/2020", "10:00", "12:00", ListCircuit.getCircuit("Monza")));
-            match1 = new Match("01/01/2020", "12:01", "14:00", ListCircuit.getCircuit("Monza"));
-            match2 = new Match("02/01/2020", "12:01", "14:00", ListCircuit.getCircuit("Monza"));
-            match3 = new Match("02/01/2020", "16:01", "17:00", ListCircuit.getCircuit("Monza"));
-            match4 = new Match("02/01/2020", "19:00", "21:00", ListCircuit.getCircuit("Monza"));
+            test.ajouterMatch(new Match("01/01/2020", "10:00", "12:00", ListCircuit.getCircuit("Monza"), 10));
+            match1 = new Match("01/01/2020", "12:01", "14:00", ListCircuit.getCircuit("Monza"), 20);
+            match2 = new Match("02/01/2020", "12:01", "14:00", ListCircuit.getCircuit("Monza"), 25);
+            match3 = new Match("02/01/2020", "16:01", "17:00", ListCircuit.getCircuit("Monza"), 20);
+            match4 = new Match("02/01/2020", "19:00", "21:00", ListCircuit.getCircuit("Monza"), 24);
         } catch (CircuitExistException e1) {
             System.out.println(e1.getMessage());
         } catch (WrongTimeException e2) {
@@ -80,7 +80,7 @@ public class TestPlanning {
     @Order(2)
     public void testAddMatchTimeIllegal() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            test.ajouterMatch(new Match("07/01/2020", "12:00", "10:00", ListCircuit.getCircuit("Silverstone")));
+            test.ajouterMatch(new Match("07/01/2020", "12:00", "10:00", ListCircuit.getCircuit("Silverstone"), 25));
         });
     }
 
@@ -91,7 +91,7 @@ public class TestPlanning {
     @Order(3)
     public void testAddMatchWrong() {
         Assertions.assertThrows(WrongTimeException.class, () -> {
-            test.ajouterMatch(new Match("01/01/2020", "11:00", "15:00", ListCircuit.getCircuit("Monza")));
+            test.ajouterMatch(new Match("01/01/2020", "11:00", "15:00", ListCircuit.getCircuit("Monza"), 25));
         });
     }
 
@@ -102,7 +102,7 @@ public class TestPlanning {
     @Order(4)
     public void testAddMatchSameTime() {
         Assertions.assertDoesNotThrow(() -> {
-            test.ajouterMatch(new Match("01/01/2020", "10:00", "12:00", ListCircuit.getCircuit("Silverstone")));
+            test.ajouterMatch(new Match("01/01/2020", "10:00", "12:00", ListCircuit.getCircuit("Silverstone"), 25));
         });
     }
 
@@ -113,7 +113,7 @@ public class TestPlanning {
     @Order(5)
     public void testAddMatchCircuitNotExist() {
         Assertions.assertThrows(CircuitExistException.class, () -> {
-            test.ajouterMatch(new Match("01/01/2020", "10:00", "12:00", ListCircuit.getCircuit("Castelet")));
+            test.ajouterMatch(new Match("01/01/2020", "10:00", "12:00", ListCircuit.getCircuit("Castelet"), 25));
         });
     }
 
@@ -128,14 +128,14 @@ public class TestPlanning {
         });
 
         // Verification que le match est bien deplace
-        assertEquals("01/01/2020, début à 16:00 et fin à 18:00. Nbr nécessaires 500 à Monza, Viale di Vedano 5, 500 places", match1.toString());
+        assertEquals("01/01/2020, début à 16:00 et fin à 18:00. Nbr nécessaires 20 à Monza, Viale di Vedano 5, 500 places", match1.toString());
 
         Assertions.assertDoesNotThrow(() -> {
             test.deplacerMatch(match1, "07/01/2020", "00:00", "23:00");
         });
         
         // Verification que le match est bien deplace
-        assertEquals("07/01/2020, début à 00:00 et fin à 23:00. Nbr nécessaires 500 à Monza, Viale di Vedano 5, 500 places", match1.toString());
+        assertEquals("07/01/2020, début à 00:00 et fin à 23:00. Nbr nécessaires 20 à Monza, Viale di Vedano 5, 500 places", match1.toString());
     }
     
     /**
@@ -167,7 +167,7 @@ public class TestPlanning {
     @Order(9)
     public void testInsertMatchBetween(){
         Assertions.assertDoesNotThrow(() -> {
-            test.ajouterMatch(new Match("02/01/2020", "14:01", "16:00", ListCircuit.getCircuit("Monza")));
+            test.ajouterMatch(new Match("02/01/2020", "14:01", "16:00", ListCircuit.getCircuit("Monza"), 30));
         });
     }
 
@@ -178,7 +178,7 @@ public class TestPlanning {
     @Order(10)
     public void testInsertMatchBetweenWrong(){
         Assertions.assertThrows(WrongTimeException.class ,() -> {
-            test.ajouterMatch(new Match("02/01/2020", "14:01", "16:05", ListCircuit.getCircuit("Monza")));
+            test.ajouterMatch(new Match("02/01/2020", "14:01", "16:05", ListCircuit.getCircuit("Monza"), 30));
         });
     }
 

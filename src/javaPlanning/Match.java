@@ -29,7 +29,7 @@ public class Match {
      * @param circuit      circuit ou se deroule le match
      * @param adherent     liste des participants
      */
-    public Match(String date, String heureDeb, String heureFin, Circuit circuit, ArrayList<Adherent> participant)
+    public Match(String date, String heureDeb, String heureFin, Circuit circuit, int nbrJoueursMax, ArrayList<Adherent> participant)
             throws IllegalArgumentException {
         // Verifie que l'heure de fin est superieur a l'heure de debut
         if (Integer.parseInt(heureDeb.split(":")[0]) > Integer.parseInt(heureFin.split(":")[0])) {
@@ -51,7 +51,7 @@ public class Match {
         this.date = date;
         this.heureDeb = heureDeb;
         this.heureFin = heureFin;
-        this.nbJoueursMax = circuit.getNbrMaxPlace();
+        this.nbJoueursMax = nbrJoueursMax;
         this.circuit = circuit;
         this.participant = participant;
     }
@@ -65,8 +65,8 @@ public class Match {
      * @param nbJoueursMax nombre de joueurs necessaires pour le match
      * @param circuit      circuit ou se deroule le match
      */
-    public Match(String date, String heureDeb, String heureFin, Circuit circuit) {
-        this(date, heureDeb, heureFin, circuit, new ArrayList<Adherent>());
+    public Match(String date, String heureDeb, String heureFin, Circuit circuit, int nbrJoueursMax) {
+        this(date, heureDeb, heureFin, circuit, nbrJoueursMax, new ArrayList<Adherent>());
     }
 
     /**
@@ -181,6 +181,24 @@ public class Match {
      */
     public void setCircuit(Circuit circuit) {
         this.circuit = circuit;
+    }
+
+    /**
+     * Getter de l'attribut nbJoueursMax
+     * 
+     * @return le nombre de joueurs max du match
+     */
+    public int getNbJoueursMax() {
+        return nbJoueursMax;
+    }
+
+    /**
+     * Setter de l'attribut nbJoueursMax
+     * 
+     * @param nbJoueursMax nouveau nombre de joueurs max du match
+     */
+    public void setNbJoueursMax(int nbJoueursMax) {
+        this.nbJoueursMax = nbJoueursMax;
     }
 
     /**
