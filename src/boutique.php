@@ -8,6 +8,9 @@
         <link rel="stylesheet" href="style/main.css" type="text/css">
         <link rel="stylesheet" href="style/footer.css" type="text/css">
         <link rel="stylesheet" href="style/header.css" type="text/css">
+
+        <script type="text/javascript" src="script/moovePict.js"></script>
+        
         <title> Boutique </title>
     </head>
 
@@ -16,9 +19,31 @@
             require_once("header.php"); 
         ?>
 
-        <div id="contenu">
-            Bienvenu dans notre Boutique
-        </div>
+        <?php
+            //Si l'utilisateur n'est pas connecté, on affiche un message
+            if (!isset($_SESSION["connected"]) || $_SESSION["connected"] == false) {
+                echo "<div id='contenu'>
+                    <h1>Boutique</h1>
+
+                    <p id='blink'>VOUS DEVEZ VOUS CONNECTER POUR VOIR LA BOUTIQUE</p>
+            
+                    <img id='gifDrole0' src='logos/partyParrot.gif'>
+                    <img id='gifDrole1' src='logos/partyParrot.gif'>
+                </div>";
+            }
+        ?>
+                    
+        <?php
+            //Si l'utilisateur est un admin, on affiche un message
+            if (isset($_SESSION["connected"]) && $_SESSION["connected"] == true && $_SESSION["admin"] == true) {
+                echo "<div id='contenu'>Vous êtes un administrateur</div>";
+            }
+
+            //Si l'utilisateur est un adhérent on affiche un message
+            if (isset($_SESSION["connected"]) && $_SESSION["connected"] == true && $_SESSION["admin"] == false) {
+                echo "<div id='contenu'>Vous êtes un adhérent</div>";
+            }
+        ?>
 
         <?php 
             require_once("footer.php");

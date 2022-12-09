@@ -6,6 +6,10 @@
     }
 </script>
 
+<?php
+    require_once("login.php");
+?>
+
 <script type="text/javascript" src="script/burgermenu.js"></script>
 
 <header>
@@ -28,7 +32,15 @@
                 <li><a class="button1" href="boutique.php"><b>Boutique</b></a></li>
                 
                 <li><a class="button1" href="inscription.php"><b>Inscription</b></a></li>
-                <li><a class="button1" href="connexion.php"><b>Connexion</b></a></li>
+                <li>
+                    <?php
+                        if (isset($_SESSION["connected"]) && $_SESSION["connected"] == true) {
+                            echo "<a class='button1' href='logout.php'><b>Deconnexion</b></a>";
+                        } else {
+                            echo "<a class='button1' onClick='login();' href=#><b>Connexion</b></a>";
+                        }
+                    ?>
+                </li>
             </ul>
         </div>
     </nav>
@@ -38,22 +50,22 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                <h5 class="modal-title" id="loginModalLabel">Connexion</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
 
             <!-- Le formulaire avec un ID pour pouvoir être récupéré avec jquery (==> #loginForm) -->
-            <form id="loginForm">
+            <form id="loginForm" action="login.php" method="post">
 
                 <!-- Mise en forme des champs input du formulaire -->
                 <div class="modal-body">
                     <div class="form-group">
-                        <input type="text" name="name" class="form-control" id="username" placeholder="Your Username...">
+                        <input type="text" name="username" class="form-control" id="username" placeholder="Votre identifiant...">
                     </div>
                     <div class="form-group">
-                        <input type="password" name="password" class="form-control" id="password" placeholder="Your password...">
+                        <input type="password" name="password" class="form-control" id="password" placeholder="Votre mot de passe...">
                     </div>
                     <div class="form-group">
                         <!-- Texte qui servira à afficher les eventuelles erreurs -->

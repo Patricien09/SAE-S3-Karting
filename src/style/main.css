@@ -25,3 +25,51 @@ body #contenu{
     font-size: 15px;
     color: white;
 }
+
+body #contenu h1{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 40px;
+    text-align: center;
+}
+
+body #contenu #blink{
+    margin-top: 280px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    text-align: center;
+    animation: blink 1s infinite;
+    transition: all ease;
+}
+
+@keyframes blink {
+    0% {
+        color: rgb(255, 0, 0);
+        font-size: 22px;  
+    }
+    
+    25% {
+        color: rgb(132, 0, 255);
+        font-size: 24px;
+    }
+
+    50% {
+        color: rgb(25, 0, 255);
+        font-size: 26px;
+    }
+
+    75% {
+        color: blueviolet;
+        font-size: 24px;
+    }
+
+    100% {
+        color: rgb(255, 0, 0);
+        font-size: 22px;
+    }
+}
+
+#gifDrole0, #gifDrole1 {
+    width: 100px;
+    height: 59px;
+}

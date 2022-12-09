@@ -1,3 +1,5 @@
+
+
 <!doctype html>
 <html>
     <head>
@@ -11,13 +13,13 @@
         <title> Evenements </title>
     </head>
 
-    <body>
+    <body onload="movePicture();">
         <?php 
             require_once("header.php"); 
         ?>
-
+        
         <div id="contenu">
-            Bienvenu dans notre page d'évenements
+            <h1> Evenements </h1>
         </div>
 
         <?php 
