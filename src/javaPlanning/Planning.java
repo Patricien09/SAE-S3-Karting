@@ -43,13 +43,14 @@ public class Planning {
      * @param heureFin   la nouvelle heure de fin du match
      */
     public void deplacerMatch(Match match, String date, String heureDebut, String heureFin) throws WrongTimeException {
-        // Recopie le match dans une variable tampon
+        // Recopie le match dans une variable tampon, et garde l'index du match dans la liste
         Match tmp = new Match(match.getDate(), match.getHeureDeb(), match.getHeureFin(), match.getCircuit(), match.getNbJoueursMax());
         supprimerMatch(match);
         if (verifierDispo(new Match(date, heureDebut, heureFin, match.getCircuit(), match.getNbJoueursMax()))) {
             match.setDate(date);
             match.setHeureDeb(heureDebut);
             match.setHeureFin(heureFin);
+            matchs.add(match);
         } else {
             // Si on ne peut pas le deplacer, on remet le match dans la liste
             matchs.add(tmp);
@@ -121,7 +122,7 @@ public class Planning {
      * Un match est affiche selon le format : date/heureDebut-heureFin/nombreNecessaire/Circuit
      */
     public void afficherPlanning() {
-        sortPlanning();
+        //sortPlanning();
         for (Match m : matchs) {
             System.out.println(m);
         }

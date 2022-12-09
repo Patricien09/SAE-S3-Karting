@@ -2,21 +2,19 @@ package javaPlanning;
 
 import java.sql.*;
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.plaf.DimensionUIResource;
 
 import javaPlanning.exceptions.CircuitExistException;
 import javaPlanning.exceptions.WrongTimeException;
-
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 
 import java.awt.GridLayout;
 import java.awt.event.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
 
-public class Main implements ActionListener{
+// TODO : Add all the matchs into the database
+
+public class Main implements ActionListener {
 
     static JFrame insertionJFrame, mainJFrame, updateJFrame;
 
@@ -24,64 +22,68 @@ public class Main implements ActionListener{
     String url = "jdbc:mysql://localhost:3306/bdsae";
     Connection con;
     Statement stmt;
-    
+
     // Objets pour le planning
     Planning planning = new Planning();
     JComboBox circuitComboBox;
 
-    // Objets du JFrame InsertionJFrame 
+    // Objets du JFrame InsertionJFrame
     JLabel entrerDate, entrerDebut, entrerFin, entrerNbrPart, entrerCircuit, confirmation;
     JTextField date, debut, fin, nbrPart, circuit;
     JButton enregistrer;
-    
+
     // Objets du JFrame mainJFrame
     JButton buttonInsertionPage, buttonUpdate, buttonDelete;
     JPanel JPButtons, JPListeEvents;
-    JScrollPane scrollablePane; 
-    JLabel legende1, legende2, legende3,legende4, legende5, legende6, displaySelectedLine;
+    JScrollPane scrollablePane;
+    JLabel legende1, legende2, legende3, legende4, legende5, legende6, displaySelectedLine;
     String selectedLine;
 
     // Objets du JFrame UpdateJFrame
-    JLabel changerDate, changerDebut, changerFin, changerNbrPart, changerCircuit, affichageResultat;
-    JTextField TFdate, TFdebut, TFfin, TFnbrPart, TFcircuit;
+    JLabel changerDate, changerDebut, changerFin, affichageResultat;
+    JTextField TFdate, TFdebut, TFfin;
     JButton modifier;
 
-    Main()
-    {
+    Main() {
         // Connexion a la bdd pour recuperer les circuits et les placer dans ListCircuit
-        // Et pour remplir le tableau de matchs
+        // On remplit aussi le planning avec les matchs de la bdd
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection(url, "root", "");
             stmt = con.createStatement();
+
             ResultSet rs = stmt.executeQuery("SELECT * FROM circuit");
             circuitComboBox = new JComboBox();
-            
+
             while (rs.next()) {
                 // Ajoute les circuits
                 circuitComboBox.addItem(rs.getString(4));
                 ListCircuit.addCircuit(new Circuit(rs.getString(4), rs.getString(2), rs.getInt(3)));
             }
-            
+
             ResultSet rs2 = stmt.executeQuery("SELECT * FROM `match` WHERE 1");
             Statement stmt2 = con.createStatement();
-            
+
             while (rs2.next()) {
+                // On recupere le circuit correspondant au circuit du match pour avoir son nom
                 ResultSet rsCircuit = stmt2.executeQuery("SELECT * FROM circuit WHERE idCircuit = " + rs2.getInt(8));
                 rsCircuit.next();
                 // Ajoute les matchs
-                System.out.println(rs2.getString(2) + " " + rs2.getString(3) + " " + rs2.getString(4) + " " + ListCircuit.getCircuit(rsCircuit.getString(4)) + " " + rs2.getInt(5));
-                // planning.ajouterMatch(new Match(rs.getString(2), rs.getString(3), rs.getString(4), ListCircuit.getCircuit(rsCircuit.getString(4)), rs.getInt(5)));
+                planning.ajouterMatch(new Match(rs2.getString(2), rs2.getString(3), rs2.getString(4),
+                        ListCircuit.getCircuit(rsCircuit.getString(4)), rs2.getInt(5)));
             }
+            // Ferme les Statement et les ResultSet
+            stmt.close();
+            stmt2.close();
         } catch (Exception e) {
             System.out.println(e);
         }
 
-        //Page d'insertion dans la bdd
+        // Page d'insertion dans la bdd
         insertionJFrame = new JFrame("Page d'insertion");
-        insertionJFrame.setLayout(new GridLayout(0,2));
+        insertionJFrame.setLayout(new GridLayout(0, 2));
         entrerDate = new JLabel("Date", SwingConstants.CENTER);
-        date = new JTextField("dd/mm/yyyy");
+        date = new JTextField("yyyy-MM-dd");
 
         entrerDebut = new JLabel("Heure de début", SwingConstants.CENTER);
         debut = new JTextField("hh:mm");
@@ -117,12 +119,12 @@ public class Main implements ActionListener{
         insertionJFrame.add(enregistrer);
         insertionJFrame.add(confirmation);
 
-        insertionJFrame.setSize(650,550);
+        insertionJFrame.setSize(650, 550);
         insertionJFrame.setVisible(false);
-  
+
         // Page contenant la liste des matchs présents dans la base de donnees
         mainJFrame = new JFrame("Planning");
-        mainJFrame.setSize(1000,600);
+        mainJFrame.setSize(1000, 600);
         mainJFrame.setLayout(new BorderLayout());
 
         legende1 = new JLabel("id", SwingConstants.CENTER);
@@ -154,7 +156,7 @@ public class Main implements ActionListener{
         legende6.setPreferredSize(new DimensionUIResource(100, 50));
 
         JPListeEvents = new JPanel(new GridLayout(0, 6));
-        
+
         JPListeEvents.add(legende1);
         JPListeEvents.add(legende2);
         JPListeEvents.add(legende3);
@@ -162,21 +164,18 @@ public class Main implements ActionListener{
         JPListeEvents.add(legende5);
         JPListeEvents.add(legende6);
 
-        // Recupere tous les matchs pour les afficher dans la liste
+        // Place les matchs du planning dans la liste
         try {
-            String query = "SELECT idMatch, date, heureDebut, heureFin, nbrPartNecessaire, (SELECT circuit.nom FROM `circuit` WHERE circuit.idCircuit = Circuit_idCircuit) FROM `match`";
-
-            ResultSet rs = stmt.executeQuery(query);
-
-            while(rs.next())
-            {
-                // Recupere les infos de chaque match
-                String id = rs.getString("idMatch");
-                String date = rs.getString("date");
-                String heureDebut = rs.getString("heureDebut");
-                String heureFin = rs.getString("heureFin");
-                String nbrPart = rs.getString("nbrPartNecessaire");
-                String circuit = rs.getString("(SELECT circuit.nom FROM `circuit` WHERE circuit.idCircuit = Circuit_idCircuit)");
+            // Tri les matchs avant
+            planning.sortPlanning();
+            // Recupere les infos de chaque match
+            for (Match m : planning.getMatchs()) {
+                String id = (planning.getMatchs().indexOf(m) + 1) + "";
+                String date = m.getDate();
+                String heureDebut = m.getHeureDeb();
+                String heureFin = m.getHeureFin();
+                String nbrPart = String.valueOf(m.getNbJoueursMax());
+                String circuit = m.getCircuit().getName();
 
                 final JButton JButtonId = new JButton(id);
                 JButtonId.addActionListener(this);
@@ -186,13 +185,6 @@ public class Main implements ActionListener{
                 final JLabel JLabelNbrPart = new JLabel(nbrPart, SwingConstants.CENTER);
                 final JLabel JLabelCircuit = new JLabel(circuit, SwingConstants.CENTER);
 
-                JButtonId.setBackground(Color.lightGray);
-                JLabelDate.setBackground(Color.lightGray);
-                JLabelHeureDebut.setBackground(Color.lightGray);
-                JLabelHeureFin.setBackground(Color.lightGray);
-                JLabelNbrPart.setBackground(Color.lightGray);
-                JLabelCircuit.setBackground(Color.lightGray);
-
                 JButtonId.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 JLabelDate.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 JLabelHeureDebut.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -200,15 +192,17 @@ public class Main implements ActionListener{
                 JLabelNbrPart.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 JLabelCircuit.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
+                // Ajout a la liste
                 JPListeEvents.add(JButtonId);
                 JPListeEvents.add(JLabelDate);
                 JPListeEvents.add(JLabelHeureDebut);
                 JPListeEvents.add(JLabelHeureFin);
                 JPListeEvents.add(JLabelNbrPart);
                 JPListeEvents.add(JLabelCircuit);
+                JPListeEvents.setBorder(BorderFactory.createEmptyBorder(0, 30, 10, 30));
             }
-            JPListeEvents.setBorder(BorderFactory.createEmptyBorder(0, 30, 10, 30));
 
+            // On ferme la connexion
             con.close();
         } catch (SQLException e) {
             // Gestion des erreurs
@@ -216,20 +210,20 @@ public class Main implements ActionListener{
         }
 
         JPButtons = new JPanel();
-        JPButtons.setLayout(new GridLayout(0,3));
+        JPButtons.setLayout(new GridLayout(0, 3));
         JPButtons.setBorder(BorderFactory.createEmptyBorder(5, 5, 2, 5));
 
-        //JButton pour inserer une ligne
+        // JButton pour inserer une ligne
         buttonInsertionPage = new JButton("Insérer un match");
         buttonInsertionPage.addActionListener(this);
         JPButtons.add(buttonInsertionPage);
 
-        //JButton pour modifier une ligne
+        // JButton pour modifier une ligne
         buttonUpdate = new JButton("Modifier un match");
         buttonUpdate.addActionListener(this);
         JPButtons.add(buttonUpdate);
 
-        //JButton pour supprimer une ligne
+        // JButton pour supprimer une ligne
         buttonDelete = new JButton("Supprimer un match");
         buttonDelete.addActionListener(this);
         displaySelectedLine = new JLabel("Ligne sélectionnée: ");
@@ -240,17 +234,15 @@ public class Main implements ActionListener{
 
         mainJFrame.add(scrollablePane, BorderLayout.CENTER);
 
-        
         JPButtons.setPreferredSize(new DimensionUIResource(50, 50));
-        mainJFrame.add(JPButtons, BorderLayout.NORTH);     
-        
+        mainJFrame.add(JPButtons, BorderLayout.NORTH);
 
         mainJFrame.setVisible(true);
         mainJFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // JFrame pour update un element dans la liste 
+        // JFrame pour update un element dans la liste
         updateJFrame = new JFrame("Page d'update");
-        updateJFrame.setLayout(new GridLayout(0,2));
+        updateJFrame.setLayout(new GridLayout(0, 2));
 
         changerDate = new JLabel("Date", SwingConstants.CENTER);
         TFdate = new JTextField();
@@ -260,12 +252,6 @@ public class Main implements ActionListener{
 
         changerFin = new JLabel("Heure de fin", SwingConstants.CENTER);
         TFfin = new JTextField();
-
-        changerNbrPart = new JLabel("Nombre de participants", SwingConstants.CENTER);
-        TFnbrPart = new JTextField();
-
-        changerCircuit = new JLabel("Circuit", SwingConstants.CENTER);
-        TFcircuit = new JTextField();
 
         modifier = new JButton("Modifier le match");
         modifier.addActionListener(this);
@@ -277,216 +263,166 @@ public class Main implements ActionListener{
         updateJFrame.add(TFdebut);
         updateJFrame.add(changerFin);
         updateJFrame.add(TFfin);
-        updateJFrame.add(changerNbrPart);
-        updateJFrame.add(TFnbrPart);
-        updateJFrame.add(changerCircuit);
-        updateJFrame.add(TFcircuit);
         updateJFrame.add(modifier);
         updateJFrame.add(affichageResultat);
-        updateJFrame.setSize(650,550);
+        updateJFrame.setSize(650, 550);
         updateJFrame.setVisible(false);
     }
 
     public void actionPerformed(ActionEvent e) {
-        //Quand le bouton pour confirmer l'insertion dans la bdd est selectionné
-        if(e.getSource() == enregistrer)
-        {
-            if(date.getText()!="" && debut.getText()!="" && fin.getText()!="" && nbrPart.getText()!="") 
-            {
+        // Quand le bouton pour confirmer l'insertion dans la bdd est selectionné
+        if (e.getSource() == enregistrer) {
+            // Verification que tous les champs sont remplis
+            if (!date.getText().equals("") && !debut.getText().equals("") && !fin.getText().equals("")
+                    && !nbrPart.getText().equals("")) {
                 try {
-                    // Creation du match
-                    Match tmp = new Match(date.getText(), debut.getText(), fin.getText(), ListCircuit.getCircuit(circuitComboBox.getSelectedItem().toString()), Integer.parseInt(nbrPart.getText()));
+                    // Creation du match pour verifier toutes les infos
+                    Match tmp = new Match(date.getText(), debut.getText(), fin.getText(),
+                            ListCircuit.getCircuit(circuitComboBox.getSelectedItem().toString()),
+                            Integer.parseInt(nbrPart.getText()));
                     // Ajout du match dans le planning
                     planning.ajouterMatch(tmp);
                     // Message de confirmation
                     confirmation.setText("Match ajouté avec succès");
                     // Rafraichissement de la liste
-                    refreshList(tmp);
+                    refreshList(tmp, "add");
+
+                    insertionJFrame.setVisible(false);
                 } catch (WrongTimeException e1) {
-                    JOptionPane.showMessageDialog(null, e1.getMessage(),"ERREUR",JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, e1.getMessage(), "ERREUR", JOptionPane.ERROR_MESSAGE);
                 } catch (CircuitExistException e2) {
-                    JOptionPane.showMessageDialog(null, e2.getMessage(),"ERREUR",JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, e2.getMessage(), "ERREUR", JOptionPane.ERROR_MESSAGE);
                 }
-            }
-            else
-            {
-                JOptionPane.showMessageDialog(null, "Un des paramètres est vide","ERREUR",JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Un des paramètres est vide", "ERREUR", JOptionPane.ERROR_MESSAGE);
             }
         }
-        //Quand le bouton pour accéder à l'écran d'insertion est sélectionné
-        else if(e.getSource() == buttonInsertionPage){
+
+        // Quand le bouton pour accéder à l'écran d'insertion est sélectionné
+        else if (e.getSource() == buttonInsertionPage) {
             insertionJFrame.setVisible(true);
         }
-        //Quand le bouton pour accéder à l'écran d'update est sélectionné
-        else if(e.getSource() == buttonUpdate)
-        {
-            if(selectedLine!=null)
-            {
-                // ResultSet rs = co.getEventById(selectedLine);
-                // try {
-                //     rs.next();
-                //     String[] debutDate = rs.getString("debut").split(" ");
-                //     String[] finDate = rs.getString("fin").split(" ");
-                //     TFtitre.setText(rs.getString("titre"));
-                //     TFdate.setText(debutDate[0]);
-                //     TFdebut.setText(debutDate[1]);
-                //     TFfin.setText(finDate[1]);
-                //     TFtype.setText(rs.getString("type"));
-                //     TFarticle_id.setText(rs.getString("article_id"));
-                // } catch (SQLException e1) {
-                //     // TODO Auto-generated catch block
-                //     e1.printStackTrace();
-                // }
+
+        // Quand le bouton pour accéder à l'écran d'update est sélectionné
+        else if (e.getSource() == buttonUpdate) {
+            if (selectedLine != null) {
+                // Recupere le match choisit dans la liste
+                Match m = planning.getMatchs().get(Integer.valueOf(selectedLine) - 1);
+
+                // Rempli les champs avec les infos du match
+                TFdate.setText(m.getDate());
+                TFdebut.setText(m.getHeureDeb());
+                TFfin.setText(m.getHeureFin());
+
+                // Affiche la page d'update
                 updateJFrame.setVisible(true);
-            }
-            else{
-                JOptionPane.showMessageDialog(null, "Selectionnez une ligne","ERREUR",JOptionPane.ERROR_MESSAGE);
-            }
-        }
-        //Quand le bouton pour supprimer un élément est sélectionné
-        else if(e.getSource() == buttonDelete)
-        {
-            if(selectedLine !=null)
-            {
-                // boolean result = co.deleteById(selectedLine);
-                // if(result)
-                // {
-                //     this.refreshList();
-                // }
-            }
-            else{
-                JOptionPane.showMessageDialog(null, "Selectionnez une ligne","ERREUR",JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Selectionnez une ligne", "ERREUR", JOptionPane.ERROR_MESSAGE);
             }
         }
-        //Quand le bouton pour effectuer la modification d'une ligne dans la bdd est sélectionné
-        else if(e.getSource() == modifier)
-        {
-            if(TFdate.getText()!="" && TFdebut.getText()!="" && TFfin.getText()!="" && TFnbrPart.getText()!="" && TFcircuit.getText() !="")
-            {
-                if(compareTime(TFdebut.getText(), TFfin.getText()))
-                {
-                    String debut = new String(date.getText()+" "+TFdebut.getText()+":00");
-                    String fin = new String(date.getText()+" "+TFdebut.getText()+":00");
-                    String nbrPart = TFnbrPart.getText();
-                    String circuit = TFcircuit.getText();
-                    // boolean result = co.updateLine(titre, debut, fin, type, article_id, selectedLine);
-                    // if(result)
-                    // {
-                    //     System.out.println("Modification réussie");
-                    //     affichageResultat.setText("Modification réussie");
-                    //     this.refreshList();
-                    // }
-                    // else{
-                    //     affichageResultat.setText("Modification non réussie");
-                    //     System.out.println("Modification non réussie");
-                    // }
+
+        // Quand le bouton pour supprimer un element est selectionne
+        else if (e.getSource() == buttonDelete) {
+            if (selectedLine != null) {
+                Match m = planning.getMatchs().get(Integer.valueOf(selectedLine) - 1);
+                planning.supprimerMatch(m);
+                refreshList(m, "delete");
+            } else {
+                JOptionPane.showMessageDialog(null, "Selectionnez une ligne", "ERREUR", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+        // Quand le bouton pour effectuer la modification d'une ligne dans la bdd est
+        // selectionne
+        else if (e.getSource() == modifier) {
+            if (!TFdate.getText().equals("") && !TFdebut.getText().equals("") && !TFfin.getText().equals("")) {
+                String date = TFdate.getText();
+                String debut = TFdebut.getText();
+                String fin = TFfin.getText();
+                try {
+                    Match tmp = planning.getMatchs().get(Integer.valueOf(selectedLine) - 1);
+                    planning.deplacerMatch(tmp, date, debut, fin);
+                    refreshList(tmp, "update");
+                    updateJFrame.setVisible(false);
+                } catch (WrongTimeException ex) {
+                    // Affiche une boite de dialogue d'erreur
+                    JOptionPane.showMessageDialog(null,
+                            "Erreur heures (heure de début>=heure de fin ou mauvaises valeurs d'entrée)", "ERREUR",
+                            JOptionPane.ERROR_MESSAGE);
                 }
-                else{
-                    JOptionPane.showMessageDialog(null, "Erreur heures (heure de début>=heure de fin ou mauvaises valeurs d'entrée)","ERREUR",JOptionPane.ERROR_MESSAGE);
-                }
-            }
-            else{
-                JOptionPane.showMessageDialog(null, "Un ou plusieurs paramètres sont vides","ERREUR",JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Un ou plusieurs paramètres sont vides", "ERREUR",
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
+
         // Quand un des bouton pour sélectionner une ligne est appuyé
-        else
-        {
-            JButton select = (JButton)e.getSource();
+        else {
+            JButton select = (JButton) e.getSource();
             selectedLine = select.getText();
             System.out.println(selectedLine);
-            // ResultSet rs = co.getEventById(selectedLine);
-            // //Affiche la ligne sélectionnée (au dessus de la liste dans le JLabel displaySelectedLine)
-            // try {
-            //     rs.next();
-            //     displaySelectedLine.setText("Ligne sélectionnée: "+selectedLine+" - "+rs.getString("titre"));
-            // } catch (SQLException e1) {
-            //     // TODO Auto-generated catch block
-            //     e1.printStackTrace();
-            // }
-            
+            displaySelectedLine.setText("Ligne sélectionnée : " + String.valueOf(selectedLine));
         }
-    }
-
-    /**
-     * Cette méthode sert à comparer deux heures entre elles 
-     * @param infTime
-     * @param supTime
-     * @return true si supTime > infTime, false si supTime <= infTime
-     */
-    public boolean compareTime(String infTime, String supTime)
-    {
-        //splittedTime[0] = heure
-        //splittedTime[1] = minutes
-        String[] infSplittedTime = infTime.split(":");
-        String[] supSplittedTime = supTime.split(":");
-        int infHeure = 0;
-        int infMinutes = 0;
-        int supHeure = 0;
-        int supMinutes = 0;
-        try{
-            infHeure = Integer.parseInt(infSplittedTime[0]);
-            infMinutes = Integer.parseInt(infSplittedTime[1]);
-            supHeure = Integer.parseInt(supSplittedTime[0]);
-            supMinutes = Integer.parseInt(supSplittedTime[1]);
-        }
-        catch(NumberFormatException e)
-        {
-            System.out.println("Erreur de format");
-            return false;
-        }
-        
-        if(infHeure> supHeure)
-        {
-            return false;
-        }
-        else if(infHeure== supHeure)
-        {
-            if(infMinutes>= supMinutes)
-            {
-                return false;
-            }
-            else{
-                return true;
-            }
-        }
-        return true;
     }
 
     /*
-     * Fonction servant a mettre la liste à jour (après insertion/suppression/modification)
+     * Fonction servant a mettre la liste à jour (après
+     * insertion/suppression/modification), type donnant le type de mise à jour
      */
-    public void refreshList(Match m)
-    {
-        // Ajoute le match dans la liste des matchs visibles
-        String id = planning.getMatchs().indexOf(m) + "";
-        String dateR = m.getDate();
-        String debutR = m.getHeureDeb();
-        String finR = m.getHeureFin();
-        String nbrPartR = String.valueOf(m.getNbJoueursMax());
-        String circuitR = m.getCircuit().getName();
+    public void refreshList(Match m, String type) {
+        switch (type) {
+            case "add":
+                // Ajoute le match dans la liste des matchs visibles
+                String id = (planning.getMatchs().indexOf(m) + 1) + "";
+                String dateR = m.getDate();
+                String debutR = m.getHeureDeb();
+                String finR = m.getHeureFin();
+                String nbrPartR = String.valueOf(m.getNbJoueursMax());
+                String circuitR = m.getCircuit().getName();
 
-        final JButton JButtonId = new JButton(id);
-        JButtonId.addActionListener(this);
-        final JLabel JLabelTitle = new JLabel(dateR, SwingConstants.CENTER);
-        final JLabel JLabelDebut = new JLabel(debutR, SwingConstants.CENTER);
-        final JLabel JLabelFin = new JLabel(finR, SwingConstants.CENTER);
-        final JLabel JLabelNbrPart = new JLabel(nbrPartR, SwingConstants.CENTER);
-        final JLabel JLabelCircuit = new JLabel(circuitR, SwingConstants.CENTER);
+                final JButton JButtonId = new JButton(id);
+                JButtonId.addActionListener(this);
+                final JLabel JLabelTitle = new JLabel(dateR, SwingConstants.CENTER);
+                final JLabel JLabelDebut = new JLabel(debutR, SwingConstants.CENTER);
+                final JLabel JLabelFin = new JLabel(finR, SwingConstants.CENTER);
+                final JLabel JLabelNbrPart = new JLabel(nbrPartR, SwingConstants.CENTER);
+                final JLabel JLabelCircuit = new JLabel(circuitR, SwingConstants.CENTER);
 
-        JButtonId.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        JLabelTitle.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        JLabelDebut.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        JLabelFin.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        JLabelNbrPart.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        JLabelCircuit.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                JButtonId.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                JLabelTitle.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                JLabelDebut.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                JLabelFin.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                JLabelNbrPart.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                JLabelCircuit.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-        JPListeEvents.add(JButtonId);
-        JPListeEvents.add(JLabelTitle);
-        JPListeEvents.add(JLabelDebut);
-        JPListeEvents.add(JLabelFin);
-        JPListeEvents.add(JLabelNbrPart);
-        JPListeEvents.add(JLabelCircuit);
+                JPListeEvents.add(JButtonId);
+                JPListeEvents.add(JLabelTitle);
+                JPListeEvents.add(JLabelDebut);
+                JPListeEvents.add(JLabelFin);
+                JPListeEvents.add(JLabelNbrPart);
+                JPListeEvents.add(JLabelCircuit);
+                break;
+
+            case "delete":
+                // Supprime le match de la liste des matchs visibles
+                JPListeEvents.remove(6 * (Integer.valueOf(selectedLine)) + 5);
+                JPListeEvents.remove(6 * (Integer.valueOf(selectedLine)) + 4);
+                JPListeEvents.remove(6 * (Integer.valueOf(selectedLine)) + 3);
+                JPListeEvents.remove(6 * (Integer.valueOf(selectedLine)) + 2);
+                JPListeEvents.remove(6 * (Integer.valueOf(selectedLine)) + 1);
+                JPListeEvents.remove(6 * (Integer.valueOf(selectedLine)));
+                break;
+
+            case "update":
+                // Met à jour le match dans la liste des matchs visibles
+                JLabel date = (JLabel) JPListeEvents.getComponent(6 * (Integer.valueOf(selectedLine)) + 1);
+                date.setText(m.getDate());
+                JLabel hDeb = (JLabel) JPListeEvents.getComponent(6 * (Integer.valueOf(selectedLine)) + 2);
+                hDeb.setText(m.getHeureDeb());
+                JLabel hFin = (JLabel) JPListeEvents.getComponent(6 * (Integer.valueOf(selectedLine)) + 3);
+                hFin.setText(m.getHeureFin());
+                break;
+        }
 
         mainJFrame.validate();
         mainJFrame.repaint();

@@ -11,7 +11,7 @@ public class Match {
      * Elle est representee par une date, une heure de debut et de fin, le nombre de
      * joueurs nécessaires
      * Un circuit ou se déroule le match, et enfin, une liste d'adherents
-     * La date est de la forme "dd/MM/yyyy"
+     * La date est de la forme "yyyy-MM-dd"
      * et les heures sont de la forme "hh:mm"
      */
     private String date, heureDeb, heureFin;
@@ -22,7 +22,7 @@ public class Match {
     /**
      * Constructeur de la classe Match, avec une liste d'adherent en parametre
      * 
-     * @param date         date du match au format "dd/MM/yyyy"
+     * @param date         date du match au format "yyyy-MM-dd"
      * @param heureDeb     heure de debut du match au format "hh:mm"
      * @param heureFin     heure de fin du match au format "hh:mm"
      * @param nbJoueursMax nombre de joueurs necessaires pour le match
@@ -101,8 +101,8 @@ public class Match {
      * @return true si le format est bon, false sinon
      */
     public boolean checkDateFormat(String date) {
-        String[] checkDate = date.split("/");
-        int day = Integer.parseInt(checkDate[0]);
+        String[] checkDate = date.split("-");
+        int day = Integer.parseInt(checkDate[2]);
         int month = Integer.parseInt(checkDate[1]);
 
         if (day > 31 || day < 1 || month > 12 || month < 1) {
