@@ -36,12 +36,20 @@
         <?php
             //Si l'utilisateur est un admin, on affiche un message
             if (isset($_SESSION["connected"]) && $_SESSION["connected"] == true && $_SESSION["admin"] == true) {
-                echo "<div id='contenu'>Vous êtes un administrateur</div>";
+                echo "<div id='contenu'>
+
+                    <h1>Boutique</h1>
+                    <p>Vous êtes un administrateur</p>
+                </div>";
             }
 
             //Si l'utilisateur est un adhérent on affiche un message
             if (isset($_SESSION["connected"]) && $_SESSION["connected"] == true && $_SESSION["admin"] == false) {
-                echo "<div id='contenu'>Vous êtes un adhérent</div>";
+                echo "<div id='contenu'>
+
+                    <h1>Boutique</h1>
+                    <p>Vous êtes un adhérent</p>
+                </div>";
             }
         ?>
 

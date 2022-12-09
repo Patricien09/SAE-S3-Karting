@@ -69,6 +69,11 @@ body #contenu #blink{
     }
 }
 
+.container .row .col-md-6 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 #gifDrole0, #gifDrole1 {
     width: 100px;
     height: 59px;

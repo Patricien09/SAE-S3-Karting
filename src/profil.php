@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="style/main.css" type="text/css">
         <link rel="stylesheet" href="style/footer.css" type="text/css">
         <link rel="stylesheet" href="style/header.css" type="text/css">
-        <title> Evenements </title>
+        <title> Vos Informations </title>
     </head>
 
     <body onload="movePicture();">
@@ -16,9 +16,20 @@
             require_once("header.php"); 
         ?>
         
-        <div id="contenu">
-            <h1> Evenements </h1>
-        </div>
+        <?php
+            require_once("infoUtilisateur.php");
+            //Si l'utilisateur est un admin, on affiche un message
+            if (isset($_SESSION["connected"]) && $_SESSION["connected"] == true && $_SESSION["admin"] == true) {
+                //On affiche les informations de l'utilisateur
+                infoUtilisateur();
+            }
+
+            //Si l'utilisateur est un adhérent on affiche un message
+            if (isset($_SESSION["connected"]) && $_SESSION["connected"] == true && $_SESSION["admin"] == false) {
+                //On affiche les informations de l'utilisateur
+                infoUtilisateur();
+            }
+        ?>
 
         <?php 
             require_once("footer.php");

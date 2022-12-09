@@ -32,15 +32,18 @@
                 <li><a class="button1" href="boutique.php"><b>Boutique</b></a></li>
                 
                 <li><a class="button1" href="inscription.php"><b>Inscription</b></a></li>
-                <li>
                     <?php
                         if (isset($_SESSION["connected"]) && $_SESSION["connected"] == true) {
-                            echo "<a class='button1' href='logout.php'><b>Deconnexion</b></a>";
+                            echo "<li><a class='button1' href='logout.php'><b>Deconnexion</b></a></li>";
+
                         } else {
                             echo "<a class='button1' onClick='login();' href=#><b>Connexion</b></a>";
                         }
+                        //si l'utilisateur est connecté, on affiche le bouton du profil
+                        if (isset($_SESSION["connected"]) && $_SESSION["connected"] == true) {
+                            echo "<li><a class='button1' href='profil.php'><b>Profil</b></a></li>";
+                        }
                     ?>
-                </li>
             </ul>
         </div>
     </nav>
