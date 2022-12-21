@@ -35,7 +35,7 @@ public class Match {
         if (Integer.parseInt(heureDeb.split(":")[0]) > Integer.parseInt(heureFin.split(":")[0])) {
             throw new IllegalArgumentException("L'heure de fin doit etre superieur a l'heure de debut");
         } else if (Integer.parseInt(heureDeb.split(":")[0]) == Integer.parseInt(heureFin.split(":")[0])) {
-            if (Integer.parseInt(heureDeb.split(":")[1]) > Integer.parseInt(heureFin.split(":")[1])) {
+            if (Integer.parseInt(heureDeb.split(":")[1]) >= Integer.parseInt(heureFin.split(":")[1])) {
                 throw new IllegalArgumentException("L'heure de fin doit etre superieur a l'heure de debut");
             }
         }

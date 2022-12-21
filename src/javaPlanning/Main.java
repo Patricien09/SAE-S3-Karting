@@ -1,6 +1,8 @@
 package javaPlanning;
 
 import java.sql.*;
+import java.util.ArrayList;
+
 import javax.swing.*;
 import javax.swing.plaf.DimensionUIResource;
 
@@ -21,7 +23,6 @@ public class Main implements ActionListener {
     // Cree les instances necessaires a la connexion a la bdd
     String url = "jdbc:mysql://localhost:3306/bdsae";
     Connection con;
-    Statement stmt;
 
     // Objets pour le planning
     Planning planning = new Planning();
@@ -50,7 +51,7 @@ public class Main implements ActionListener {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection(url, "root", "");
-            stmt = con.createStatement();
+            Statement stmt = con.createStatement();
 
             ResultSet rs = stmt.executeQuery("SELECT * FROM circuit");
             circuitComboBox = new JComboBox();
@@ -134,35 +135,23 @@ public class Main implements ActionListener {
         legende5 = new JLabel("Nombre Participant", SwingConstants.CENTER);
         legende6 = new JLabel("Circuit", SwingConstants.CENTER);
 
-        legende1.setForeground(Color.blue);
-        legende2.setForeground(Color.blue);
-        legende3.setForeground(Color.blue);
-        legende4.setForeground(Color.blue);
-        legende5.setForeground(Color.blue);
-        legende6.setForeground(Color.blue);
-
-        legende1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        legende2.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        legende3.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        legende4.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        legende5.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        legende6.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-
-        legende1.setPreferredSize(new DimensionUIResource(100, 50));
-        legende2.setPreferredSize(new DimensionUIResource(100, 50));
-        legende3.setPreferredSize(new DimensionUIResource(100, 50));
-        legende4.setPreferredSize(new DimensionUIResource(100, 50));
-        legende5.setPreferredSize(new DimensionUIResource(100, 50));
-        legende6.setPreferredSize(new DimensionUIResource(100, 50));
-
         JPListeEvents = new JPanel(new GridLayout(0, 6));
 
-        JPListeEvents.add(legende1);
-        JPListeEvents.add(legende2);
-        JPListeEvents.add(legende3);
-        JPListeEvents.add(legende4);
-        JPListeEvents.add(legende5);
-        JPListeEvents.add(legende6);
+        ArrayList<JLabel> listLegende = new ArrayList<JLabel>();
+
+        listLegende.add(legende1);
+        listLegende.add(legende2);
+        listLegende.add(legende3);
+        listLegende.add(legende4);
+        listLegende.add(legende5);
+        listLegende.add(legende6);
+
+        for (JLabel l : listLegende) {
+            l.setForeground(Color.blue);
+            l.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            l.setPreferredSize(new DimensionUIResource(100, 50));
+            JPListeEvents.add(l);
+        }
 
         // Place les matchs du planning dans la liste
         try {
@@ -270,6 +259,12 @@ public class Main implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
+        try {
+            con = DriverManager.getConnection(url, "root", "");
+        } catch (Exception ex) {
+            System.out.println("Erreur de connexion");
+        }
+
         // Quand le bouton pour confirmer l'insertion dans la bdd est selectionné
         if (e.getSource() == enregistrer) {
             // Verification que tous les champs sont remplis
@@ -284,14 +279,28 @@ public class Main implements ActionListener {
                     planning.ajouterMatch(tmp);
                     // Message de confirmation
                     confirmation.setText("Match ajouté avec succès");
+
+                    Statement stmt = con.createStatement();
+
+                    String query = "INSERT INTO `match` (`idMatch`, `date`, `heureDebut`, `heureFin`, `nbrPartNecessaire`, `Gagnant`, `resultatFinal`, `Circuit_idCircuit`, `Admin_Personne_idPersonne`) VALUES (NULL, '" + java.sql.Date.valueOf(date.getText()) + "', '" + java.sql.Time.valueOf(debut.getText() + ":00") + "', '" + java.sql.Time.valueOf(fin.getText() + ":00") + "', '" + Integer.parseInt(nbrPart.getText()) + "', NULL, NULL, (SELECT `idCircuit` from `circuit` WHERE `adresse` = '" + ListCircuit.getCircuit(circuitComboBox.getSelectedItem().toString()).getAdresse() + "'), '36')";
+
+                    // Ajoute la ligne dans la bdd apres les verifications
+                    stmt.executeUpdate(query);
+                    stmt.close();
+
                     // Rafraichissement de la liste
                     refreshList(tmp, "add");
 
                     insertionJFrame.setVisible(false);
+                    confirmation.setText("");
                 } catch (WrongTimeException e1) {
                     JOptionPane.showMessageDialog(null, e1.getMessage(), "ERREUR", JOptionPane.ERROR_MESSAGE);
                 } catch (CircuitExistException e2) {
                     JOptionPane.showMessageDialog(null, e2.getMessage(), "ERREUR", JOptionPane.ERROR_MESSAGE);
+                } catch (IllegalArgumentException e3) {
+                    JOptionPane.showMessageDialog(null, e3.getMessage(), "ERREUR", JOptionPane.ERROR_MESSAGE);
+                } catch (SQLException e4) {
+                    JOptionPane.showMessageDialog(null, e4.getMessage(), "ERREUR", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Un des paramètres est vide", "ERREUR", JOptionPane.ERROR_MESSAGE);
@@ -326,6 +335,22 @@ public class Main implements ActionListener {
             if (selectedLine != null) {
                 Match m = planning.getMatchs().get(Integer.valueOf(selectedLine) - 1);
                 planning.supprimerMatch(m);
+
+                try {
+                    Statement stmt = con.createStatement();
+
+                    // Supprime d'abord les lignes dans la table match_has_adherent ou le match est present
+                    // Puis supprime la ligne dans la table match
+                    String query1 = "DELETE from `match_has_adherent` WHERE `Match_idMatch` = (SELECT `idMatch` FROM `match` WHERE `date` = '" + java.sql.Date.valueOf(m.getDate()) + "' AND `heureDebut` = '" + java.sql.Time.valueOf(m.getHeureDeb()) + "' AND `heureFin` = '" + java.sql.Time.valueOf(m.getHeureFin()) + "')";
+                    String query2 = "DELETE from `match` WHERE `date` = '" + java.sql.Date.valueOf(m.getDate()) + "' AND `heureDebut` = '" + java.sql.Time.valueOf(m.getHeureDeb()) + "' AND `heureFin` = '" + java.sql.Time.valueOf(m.getHeureFin()) + "'";
+
+                    stmt.executeUpdate(query1);
+                    stmt.executeUpdate(query2);
+                    stmt.close();
+                } catch (SQLException e1) {
+                    System.err.println(e1.getMessage());
+                }
+
                 refreshList(m, "delete");
             } else {
                 JOptionPane.showMessageDialog(null, "Selectionnez une ligne", "ERREUR", JOptionPane.ERROR_MESSAGE);
@@ -341,7 +366,19 @@ public class Main implements ActionListener {
                 String fin = TFfin.getText();
                 try {
                     Match tmp = planning.getMatchs().get(Integer.valueOf(selectedLine) - 1);
+                    String oldDate = tmp.getDate();
+                    String oldDebut = tmp.getHeureDeb();
+                    String oldFin = tmp.getHeureFin();
                     planning.deplacerMatch(tmp, date, debut, fin);
+
+                    Statement stmt = con.createStatement();
+
+                    // Modifie la ligne dans la bdd
+                    String query = "UPDATE `match` SET `date` = '" + java.sql.Date.valueOf(date) + "', `heureDebut` = '" + java.sql.Time.valueOf(debut) + "', `heureFin` = '" + java.sql.Time.valueOf(fin) + "' WHERE `date` = '" + java.sql.Date.valueOf(oldDate) + "' AND `heureDebut` = '" + java.sql.Time.valueOf(oldDebut) + "' AND `heureFin` = '" + java.sql.Time.valueOf(oldFin) + "'";
+
+                    stmt.executeUpdate(query);
+                    stmt.close();
+
                     refreshList(tmp, "update");
                     updateJFrame.setVisible(false);
                 } catch (WrongTimeException ex) {
@@ -349,6 +386,8 @@ public class Main implements ActionListener {
                     JOptionPane.showMessageDialog(null,
                             "Erreur heures (heure de début>=heure de fin ou mauvaises valeurs d'entrée)", "ERREUR",
                             JOptionPane.ERROR_MESSAGE);
+                } catch (SQLException e1) {
+                    System.err.println(e1.getMessage());
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Un ou plusieurs paramètres sont vides", "ERREUR",
@@ -362,6 +401,12 @@ public class Main implements ActionListener {
             selectedLine = select.getText();
             System.out.println(selectedLine);
             displaySelectedLine.setText("Ligne sélectionnée : " + String.valueOf(selectedLine));
+        }
+
+        try {
+            con.close();
+        } catch (SQLException e1) {
+            System.err.println(e1.getMessage());
         }
     }
 
