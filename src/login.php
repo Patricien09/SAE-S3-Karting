@@ -14,9 +14,11 @@
 
         $stmt = $connexion->prepare($sql);
 
-        $stmt->bindParam(':mail', $username);
+        $values = [
+            ":mail" => $username
+        ];
 
-        $res = $stmt->execute();
+        $res = $stmt->execute($values);
 
         if (!$res) {
             echo "Problème d'accès à la bdd";
@@ -39,9 +41,11 @@
                     //Recupere l'id de l'admin dans la table admin
                     $sql = "SELECT `Personne_idPersonne` FROM `admin` WHERE `Personne_idPersonne` = :id";
                     $stmt2 = $connexion->prepare($sql);
-                    $stmt2 -> bindParam(':id', $row["idPersonne"]);
+                    $values2 = [
+                        ":id" => $row["idPersonne"]
+                    ];
     
-                    $res = $stmt2->execute();
+                    $res = $stmt2->execute($values2);
                     //Declare une variable de session admin qui est true si l'utilisateur est admin
                     $_SESSION["admin"] = $stmt2->rowCount() == 0 ? false : true;
                     $_POST = array();
