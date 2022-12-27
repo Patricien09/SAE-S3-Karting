@@ -6,10 +6,10 @@
         //Afficher les infos de l'utilisateur connecté avec une requete sql et en utilisant PDO et en l'affichant en HTML
 
         $connexion = connect_bd();
-        $sql = "SELECT * FROM `personne` WHERE `mail` = :mail AND `mdp` = :mdp";
+        $sql = "SELECT * FROM `personne` WHERE `mail` = :mail";
         $stmt = $connexion->prepare($sql);
         $stmt->bindParam(':mail', $_SESSION["username"]);
-        $stmt->bindParam(':mdp', $_SESSION["password"]);
+
         $res = $stmt->execute();
         if (!$res) {
             echo "Problème d'accès à la bdd";
