@@ -1,3 +1,7 @@
+<?php
+require_once("login.php");
+?>
+
 <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script>
@@ -25,8 +29,11 @@
                     // Si l'adresse mail est déjà utilisée
                     else if (data == "Cette adresse mail est déjà utilisée") {
                         $("#regError").html(data);
-                    } else {
+                    } else if (data == "Inscription réussie") {
+                        $("#regError").html("");
+                        alert("Inscription réussie");
                         $("#regModal").modal('hide');
+                        $("#loginModal").modal('show');
                     }
                 },
                 error: function(data) {
@@ -36,10 +43,6 @@
         });
     });
 </script>
-
-<?php
-require_once("login.php");
-?>
 
 <script type="text/javascript" src="script/burgermenu.js"></script>
 
@@ -62,16 +65,15 @@ require_once("login.php");
                 <li><a href="partenaire.php"><b>Partenaires</b></a></li>
                 <li><a href="boutique.php"><b>Boutique</b></a></li>
 
-                <li><a onClick="register()" href=#><b>Inscription</b></a></li>
+                
                 <?php
+                //si l'utilisateur est connecté, on affiche le bouton du profil et de déconnexion
                 if (isset($_SESSION["connected"]) && $_SESSION["connected"] == true) {
                     echo "<li><a class='button1' href='logout.php'><b>Deconnexion</b></a></li>";
-                } else {
-                    echo "<a class='button1' onClick='login();' href=#><b>Connexion</b></a>";
-                }
-                //si l'utilisateur est connecté, on affiche le bouton du profil
-                if (isset($_SESSION["connected"]) && $_SESSION["connected"] == true) {
                     echo "<li><a class='button1' href='profil.php'><b>Profil</b></a></li>";
+                } else {
+                    echo "<li><a onClick=\"register()\" href=#><b>Inscription</b></a></li>";
+                    echo "<a class='button1' onClick='login();' href=#><b>Connexion</b></a>";
                 }
                 ?>
             </ul>

@@ -29,8 +29,32 @@ if (isset($_POST["name"]) && isset($_POST["forename"]) && isset($_POST["adresse"
 
     if (!$res) {
         exit("Problème d'accès à la bdd");
-    }
-    else if ($stmt->rowCount() != 0) {
+    } elseif ($stmt->rowCount() != 0) {
         exit("Cette adresse mail est déjà utilisée");
+    }
+
+    // Hash le mot de passe
+    $hash = password_hash($password, PASSWORD_DEFAULT);
+
+    // Insère les données dans la table personne
+    $sql = htmlspecialchars("INSERT INTO `personne` (`nom`, `prenom`, `adresse`, `telephone`, `mail`, `mdp`, `mdpClair`) VALUES (:name, :forename, :adresse, :phone, :mail, :password, :password2)");
+
+    $values = [
+        ":name" => $name,
+        ":forename" => $forename,
+        ":adresse" => $adresse,
+        ":phone" => $phone,
+        ":mail" => $mail,
+        ":password" => $hash,
+        ":password2" => $password
+    ];
+
+    $stmt = $connexion->prepare($sql);
+    $res = $stmt->execute($values);
+
+    if (!$res) {
+        exit("Problème d'accès à la bdd");
+    } else {
+        echo "Inscription réussie";
     }
 }
