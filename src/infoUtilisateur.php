@@ -18,7 +18,7 @@ function infoUtilisateur()
         echo "Problème d'accès à la bdd";
     } else {
         if ($stmt->rowCount() == 0) {
-?>
+        ?>
             <script>
                 alert("Erreur de connexion");
             </script>
@@ -45,9 +45,9 @@ function infoUtilisateur()
                             echo "<img src='logos/kart.jpg' alt='Photo de profil' width='200' height='200'>";
                         }
 
-                        // Ajoute un bouton permettant de choisir une image
+                        // Ajoute un formulaire permettant de choisir une image et de l'envoyer au serveur
                         ?>
-                        <form action="upload.php" method="post" enctype="multipart/form-data">
+                        <form action="upload.php" method="post" enctype="multipart/form-data" id="pictureForm">
                             <div class="modal-body">
                                 <div class="form-group">
                                     <input type="file" name="file" id="file" accept="image/*">
@@ -55,6 +55,16 @@ function infoUtilisateur()
                                 <div class="form-group">
                                     <input type="reset" name="reset" class="btn btn-secondary">
                                     <input type="submit" name="submit" class="btn btn-primary">
+                                </div>
+                                <!-- Afficher les erreurs éventuelles -->
+                                <div class="form-group">
+                                    <small id="upError" class="text-danger">
+                                        <?php
+                                        if (isset($_GET['error']) && $_GET['error'] == "fileSize") {
+                                            echo "Le fichier est trop volumineux";
+                                        }
+                                        ?>
+                                    </small>
                                 </div>
                             </div>
                         </form>
@@ -64,7 +74,34 @@ function infoUtilisateur()
                     <p>Prénom : <?php echo $row["prenom"]; ?></p>
                     <p>Téléphone : <?php echo $row["telephone"]; ?></p>
                     <p>Mail : <?php echo $row["mail"]; ?></p>
-                    <p>Document administratif : <?php echo $row["mail"]; ?></p>
+                    <p>Document administratif : 
+                        <?php 
+                        // Vérifie que le fichier existe puis affiche un bouton pour le télécharger
+                        if (!file_exists("users/" . $_SESSION["username"] . "/doc_administratif.pdf")) {
+                            echo "Aucun document administratif";
+                        } else {
+                            echo "<a href='users/" . $_SESSION["username"] . "/doc_administratif.pdf'>Télécharger le document administratif</a>";
+                        }
+                        ?>
+
+                        <form action="upload.php" method="post" enctype="multipart/form-data" id="docForm">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <input type="file" name="filePdf" id="filePdf" accept="application/pdf">
+                                </div>
+                                <div class="form-group">
+                                    <input type="reset" name="reset" class="btn btn-secondary">
+                                    <input type="submit" name="submitPdf" class="btn btn-primary">
+                                </div>
+                                <div class="form-group">
+                                    <!-- Texte qui servira à afficher les eventuelles erreurs -->
+                                    <small id="upErrorPdf" class="text-danger">
+
+                                    </small>
+                                </div>
+                            </div>
+                        </form>
+                    </p>
                 </div>
             </body>
 <?php

@@ -23,6 +23,7 @@ header nav{
     border-style: solid;
     background-color: rgb(0, 0, 0);
     border-color: rgb(255, 191, 0);
+    z-index: 1000;
 }
 
 body.menu-open nav div ul li a {
