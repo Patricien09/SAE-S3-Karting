@@ -57,7 +57,10 @@
                             echo "<p> Début : " . $row["heureDebut"] . "</p>";
                             echo "<p> Fin : " . $row["heureFin"] . "</p>";
                             echo "<p> Nombre de participants nécessaires : " . $row["nbrPartNecessaire"] . "</p>";
-                            echo "<button id=\"" . $row["idMatch"] . "\" class=\"registerMatch\"> S'inscrire </button>";
+                            if (isset($_SESSION["connected"]) && $_SESSION["connected"]) {
+                                echo "<button id=\"" . $row["idMatch"] . "\" class=\"registerMatch\" onclick=\"registerMatch(" . $row["idMatch"] . "," . $_SESSION["id"] . ")\"> S'inscrire </button>";
+                            }
+                            echo "<small id=\"matchError" . $row["idMatch"] . "\"> </small>";
                             echo "</li>";
                         }
                     ?>

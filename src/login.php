@@ -41,6 +41,7 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
             if (password_verify($password, $row["mdp"])) {
                 $_SESSION["connected"] = true;
                 $_SESSION["username"] = $username;
+                $_SESSION["id"] = $row["idPersonne"];
                 //Recupere l'id de l'admin dans la table admin
                 $sql = "SELECT `Personne_idPersonne` FROM `admin` WHERE `Personne_idPersonne` = :id";
                 $stmt2 = $connexion->prepare($sql);

@@ -42,6 +42,31 @@ require_once("login.php");
             });
         });
     });
+
+    // Function to register to a match
+    // Send data to registerMatch.php
+    // If the registration is successful, display a message
+    // registerMatch.php will add the id of the match and the id of the person in the table "match_has_adherent"
+    function registerMatch(idMatch, idPersonne) {
+        $.ajax({
+            url: "registerMatch.php",
+            dataType: "html",
+            type: "POST",
+            data: {
+                idMatch: idMatch,
+                idPersonne: idPersonne
+            },
+            success: function(data) {
+                if (data == "Réussie")
+                    $("#matchError" + idMatch).html("Inscription réussie");
+                else if (data == "Erreur")
+                    $("#matchError" + idMatch).html("Erreur lors de l'inscription au match");
+            },
+            error: function(data) {
+                alert("Erreur lors de l'inscription au match");
+            }
+        });
+    }
 </script>
 
 <script type="text/javascript" src="script/burgermenu.js"></script>

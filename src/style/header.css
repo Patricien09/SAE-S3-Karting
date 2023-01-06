@@ -1,6 +1,7 @@
 :root {
     --backColor:rgba(22, 22, 22, 0.773);
     --footColor:rgba(75, 75, 76, 0.53);
+    --yellowColor:rgb(255, 191, 0);
 }   
 
 header nav{
@@ -22,7 +23,7 @@ header nav{
     border-width: 1px;
     border-style: solid;
     background-color: rgb(0, 0, 0);
-    border-color: rgb(255, 191, 0);
+    border-color: var(--yellowColor);
     z-index: 1000;
 }
 
@@ -65,7 +66,7 @@ header{
     background-color: var(--footColor);
     border-width: 1px;
     border-style: solid;
-    border-color: rgb(255, 191, 0);
+    border-color: var(--yellowColor);
 }
 
 .button {
@@ -109,7 +110,7 @@ a.logo img{
     height:3px;
     display:inline-block;
     position:relative;
-    background:rgb(255, 191, 0);
+    background:var(--yellowColor);
 }
 
 #burger::before,
@@ -121,7 +122,7 @@ a.logo img{
     position:absolute;
     transform-origin: center;
     transition: all 0.3s ease;
-    background:rgb(255, 191, 0);
+    background:var(--yellowColor);
 }
 
 #burger::before {
