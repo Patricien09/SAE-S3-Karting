@@ -6,11 +6,11 @@ $target_dir = "users/" . $_SESSION["username"] . "/";
 $uploadOk = 1;
 
 // Si le formulaire pour la photo de profil a été envoyé
-if (isset($_FILES["file"])) {
+if (isset($_FILES['file'])) {
     $target_file = $target_dir . "profil." . pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION);
     // Vérifie que l'image est bien une image
-    if (isset($_POST["submit"])) {
-        $check = getimagesize($_FILES["file"]["tmp_name"]);
+    if (isset($_POST['submit'])) {
+        $check = getimagesize($_FILES['file']['tmp_name']);
         if ($check !== false) {
             echo "Le fichier est une image - " . $check["mime"] . ".";
             $uploadOk = 1;
@@ -42,7 +42,7 @@ if (isset($_FILES["file"])) {
             echo "Erreur lors de l'upload du fichier.";
         }
     }
-} elseif (isset($_FILES["filePdf"])) {
+} elseif (isset($_FILES['filePdf'])) {
     $target_file = $target_dir . "doc_administratif.pdf";
     // Vérifie la taille du fichier
     if ($_FILES["filePdf"]["size"] > 1000000) {

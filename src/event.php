@@ -14,10 +14,61 @@
     <body onload="movePicture();">
         <?php 
             require_once("header.php"); 
+            require_once("connectBD.php");
+
+            //On récupère les événements
+            $con = connect_bd();
+            $sql = "SELECT * FROM `match`";
+            $stmt = $con->prepare($sql);
+
+            $res = $stmt->execute();
+
+            if (!$res) {
+                echo "Erreur lors de la récupération des événements";
+            }
+
+            $sql = "SELECT * FROM `circuit` WHERE `idCircuit` = :idCircuit";
+            $stmt2 = $con->prepare($sql);
         ?>
         
         <div id="contenu">
             <h1> Evenements </h1>
+            <h2> A venir : </h2>
+            <div class="event-list">
+                <ul class="events">
+                    <?php
+                        //On affiche les événements
+                        while ($row = $stmt->fetch()) {
+                            $values = [
+                                "idCircuit" => $row["Circuit_idCircuit"]
+                            ];
+                    
+                            $res = $stmt2->execute($values);
+                    
+                            if (!$res) {
+                                echo "Erreur lors de la récupération des circuits";
+                            }
+                            
+                            $rowCirc = $stmt2->fetch();
+                            echo "<li class='event'>";
+                            echo "<h2>" . $row["date"] . "</h2>";
+                            echo "<p> Circuit : " . $rowCirc["nom"] . "</p>";
+                            echo "<p> Adresse : " . $rowCirc["adresse"] . "</p>";
+                            echo "<p> Début : " . $row["heureDebut"] . "</p>";
+                            echo "<p> Fin : " . $row["heureFin"] . "</p>";
+                            echo "<p> Nombre de participants nécessaires : " . $row["nbrPartNecessaire"] . "</p>";
+                            echo "<button id=\"" . $row["idMatch"] . "\" class=\"registerMatch\"> S'inscrire </button>";
+                            echo "</li>";
+                        }
+                    ?>
+                </ul>
+            </div>
+            <h2> Passés : </h2>
+            <div class="event-list">
+                <ul class="events">
+                    <li class="event">Bonjour</li>
+                </ul>
+            </div>
         </div>
 
         <?php 
