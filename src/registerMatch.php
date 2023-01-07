@@ -8,7 +8,11 @@ require_once("connectBD.php");
 
 $con = connect_bd();
 
-$sql = "SET FOREIGN_KEY_CHECKS=0; INSERT INTO `match_has_adherent` (`Match_idMatch`, `Adherent_Personne_idPersonne`) VALUES (:idMatch, :idPersonne); SET FOREIGN_KEY_CHECKS=1";
+if ($_POST["unRegister"] == "true") {
+    $sql = "DELETE FROM `match_has_adherent` WHERE `Match_idMatch` = :idMatch AND `Adherent_Personne_idPersonne` = :idPersonne";
+} else {
+    $sql = "SET FOREIGN_KEY_CHECKS=0; INSERT INTO `match_has_adherent` (`Match_idMatch`, `Adherent_Personne_idPersonne`) VALUES (:idMatch, :idPersonne); SET FOREIGN_KEY_CHECKS=1";
+}
 
 $values = [
     "idMatch" => $_POST["idMatch"],
@@ -22,6 +26,9 @@ if (!$res) {
     exit("Erreur");
 }
 
-exit("Réussie")
+if ($_POST["unRegister"] == "true") {
+    exit("Réussie unreg");
+}
+exit("Réussie inscr")
 
 ?>

@@ -50,7 +50,8 @@ body #contenu #blink{
     background-color: var(--eventColor);
     border-radius: 20px;
     overflow-x: auto;
-    width: 80%;
+    width: auto;
+    max-width: 80%;
     height: 100%;
     scroll-behavior: smooth;
 }
@@ -100,6 +101,13 @@ body #contenu #blink{
 	background-size:400%;
 	-webkit-animation:Gradient 1s ease infinite;
 	animation:Gradient 1s ease infinite;
+}
+
+.unreg:hover {
+    box-shadow:0 5px 8px rgba(247, 10, 22, 0.25);
+	background: rgb(255, 68, 68);
+	background:-webkit-linear-gradient(left,rgb(255, 68, 68) 0%,red 100%);
+	background:linear-gradient(to right,rgb(255, 68, 68) 0%,red 100%);
 }
 
 @keyframes blink {

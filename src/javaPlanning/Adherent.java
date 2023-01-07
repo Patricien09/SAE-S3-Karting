@@ -8,10 +8,12 @@ public class Adherent {
 
     private ArrayList<Match> matchs;
     private String nom, prenom;
+    private int id;
 
-    public Adherent(String nom, String prenom) {
+    public Adherent(String nom, String prenom, int id) {
         this.nom = nom;
         this.prenom = prenom;
+        this.id = id;
         this.matchs = new ArrayList<Match>();
     }
 
@@ -27,6 +29,23 @@ public class Adherent {
             System.out.println(e.getMessage());
         }
         matchs.add(match);
+    }
+
+    public String getNom() {
+        return nom;
+    }
+
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return (nom + " " + prenom + " " + id);
     }
 
 }
