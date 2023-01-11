@@ -154,7 +154,7 @@ require_once("login.php");
                     <li><a href="event.php"><b>Evenements</b></a></li>
 
                     <li><a href="partenaire.php"><b>Partenaires</b></a></li>
-                    <li><a href="boutique.php"><b>Boutique</b></a></li>
+                    <li><a href="reservation.php"><b>Réservation</b></a></li>
 
                     
                     <?php
