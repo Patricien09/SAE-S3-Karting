@@ -82,9 +82,9 @@
                     echo "<p> Nombre de participants nécessaires : " . $row["nbrPartNecessaire"] . "</p>";
                     if (isset($_SESSION["connected"]) && $_SESSION["connected"]) {
                         if ($isRegistered) {
-                            echo "<button id=\"" . $row["idMatch"] . "\" class=\"registerMatch unreg\" onclick=\"registerMatch(" . $row["idMatch"] . "," . $_SESSION["id"] . ",true)\"> Se désinscrire </button>";
+                            echo "<button id='" . $row["idMatch"] . "' class='registerMatch unreg' onclick='registerMatch(" . $row["idMatch"] . "," . $_SESSION["id"] . ",true)'> Se désinscrire </button>";
                         } else {
-                            echo "<button id=\"" . $row["idMatch"] . "\" class=\"registerMatch\" onclick=\"registerMatch(" . $row["idMatch"] . "," . $_SESSION["id"] . ",false)\"> S'inscrire </button>";
+                            echo "<button id='" . $row["idMatch"] . "' class='registerMatch' onclick='registerMatch(" . $row["idMatch"] . "," . $_SESSION["id"] . ",false)'> S'inscrire </button>";
                         }
                     }
                     echo "<small id=\"matchError" . $row["idMatch"] . "\"> </small>";
