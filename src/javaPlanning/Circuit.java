@@ -23,6 +23,10 @@ public class Circuit {
         return name;
     }
 
+    public String getAdresse() {
+        return adresse;
+    }
+
     @Override
     public String toString() {
         return (name + ", " + adresse + ", " + nbrMaxPlace + " places");

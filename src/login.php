@@ -1,70 +1,68 @@
 <?php
-    session_start();
-    require_once("connectbd.php");
 
-    //Si le formulaire a été envoyé
-    if (isset($_POST["username"]) && isset($_POST["password"])) {
-        $_SESSION["username"] = $_POST["username"];
-        $_SESSION["password"] = $_POST["password"];
+session_set_cookie_params(0);
+session_start();
 
-        $connexion = connect_bd();
+require_once("connectbd.php");
 
-        //Récupère toutes les lignes correspondantes à l'utilisateur
-        $sql = "SELECT * FROM `personne` WHERE `mail` = :mail AND `mdp` = :mdp";
+//Si le formulaire a été envoyé
+if (isset($_POST["username"]) && isset($_POST["password"])) {
+    $username = $_POST["username"];
+    $password = $_POST["password"];
 
-        $stmt = $connexion->prepare($sql);
+    $connexion = connect_bd();
 
-        $stmt->bindParam(':mail', $_SESSION["username"]);
-        $stmt->bindParam(':mdp', $_SESSION["password"]);
+    //Récupère toutes les lignes correspondantes à l'utilisateur
+    $sql = "SELECT * FROM `personne` WHERE `mail` = :mail";
 
-        $res = $stmt->execute();
+    $stmt = $connexion->prepare($sql);
 
-        if (!$res) {
-            echo "Problème d'accès à la bdd";
+    $values = [
+        ":mail" => $username
+    ];
+
+    $res = $stmt->execute($values);
+
+    if (!$res) {
+        echo "Problème d'accès à la bdd";
+    } else {
+        //Si la personne n'exsite pas
+        if ($stmt->rowCount() == 0) {
+?>
+
+            <script>
+                alert("Erreur de connexion");
+            </script>
+
+        <?php
         } else {
-            //Si la personne n'exsite pas
-            if ($stmt->rowCount() == 0) {
-                ?>
-
-                <script>
-                    alert("Erreur de connexion");
-                </script>
-
-            <?php
-            } else {
+            $row = $stmt->fetch();
+            //Si le mot de passe correspond à celui de la bdd
+            if (password_verify($password, $row["mdp"])) {
                 $_SESSION["connected"] = true;
-                //recupere l'id de l'admin dans la table admin
+                $_SESSION["username"] = $username;
+                $_SESSION["id"] = $row["idPersonne"];
+                //Recupere l'id de l'admin dans la table admin
                 $sql = "SELECT `Personne_idPersonne` FROM `admin` WHERE `Personne_idPersonne` = :id";
                 $stmt2 = $connexion->prepare($sql);
-                $stmt2 -> bindParam(':id', $stmt->fetch()["idPersonne"]);
+                $values2 = [
+                    ":id" => $row["idPersonne"]
+                ];
 
-                $res = $stmt2->execute();
-                //script pour savoir si l'utilisateur est un admin ou non
-                if ($stmt2->rowCount() == 0) {
-                    $_SESSION["admin"] = false;
-                    ?>
-                    <script>
-                        alert("Vous n'êtes pas un admin");
-                    </script>
-                <?php
-                } else {
-                    $_SESSION["admin"] = true;
-                    ?>
-                    <script>
-                        alert("Vous êtes un admin");
-                    </script>
-                <?php
-                }
+                $res = $stmt2->execute($values2);
+                //Declare une variable de session admin qui est true si l'utilisateur est admin
+                $_SESSION["admin"] = $stmt2->rowCount() == 0 ? false : true;
                 $_POST = array();
-            ?>
-
-                <script>
-                    alert("Connexion réussie");
-                </script>
-
-            <?php
-                header("Location: accueil.php");
             }
+        ?>
+
+            <script>
+                alert("Connexion réussie");
+                window.location.replace("accueil.php");
+            </script>
+
+<?php
         }
     }
+}
 ?>

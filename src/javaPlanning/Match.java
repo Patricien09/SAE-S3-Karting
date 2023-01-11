@@ -18,7 +18,9 @@ public class Match {
     private Circuit circuit;
     private int nbJoueursMax;
     private ArrayList<Adherent> participant;
+    private Adherent gagnant = null;
 
+    
     /**
      * Constructeur de la classe Match, avec une liste d'adherent en parametre
      * 
@@ -35,11 +37,11 @@ public class Match {
         if (Integer.parseInt(heureDeb.split(":")[0]) > Integer.parseInt(heureFin.split(":")[0])) {
             throw new IllegalArgumentException("L'heure de fin doit etre superieur a l'heure de debut");
         } else if (Integer.parseInt(heureDeb.split(":")[0]) == Integer.parseInt(heureFin.split(":")[0])) {
-            if (Integer.parseInt(heureDeb.split(":")[1]) > Integer.parseInt(heureFin.split(":")[1])) {
+            if (Integer.parseInt(heureDeb.split(":")[1]) >= Integer.parseInt(heureFin.split(":")[1])) {
                 throw new IllegalArgumentException("L'heure de fin doit etre superieur a l'heure de debut");
             }
         }
-
+        
         if (!checkTimeFormat(heureDeb, heureFin)) {
             throw new IllegalArgumentException("Le format des heures est incorrect");
         }
@@ -47,7 +49,7 @@ public class Match {
         if (!checkDateFormat(date)) {
             throw new IllegalArgumentException("Le format de la date est incorrect");
         }
-
+        
         this.date = date;
         this.heureDeb = heureDeb;
         this.heureFin = heureFin;
@@ -55,7 +57,7 @@ public class Match {
         this.circuit = circuit;
         this.participant = participant;
     }
-
+    
     /**
      * Constructeur de la classe Match, sans liste d'adherent en parametre
      * 
@@ -68,7 +70,7 @@ public class Match {
     public Match(String date, String heureDeb, String heureFin, Circuit circuit, int nbrJoueursMax) {
         this(date, heureDeb, heureFin, circuit, nbrJoueursMax, new ArrayList<Adherent>());
     }
-
+    
     /**
      * Verifie que le format des heures sont bien les bons
      * Cad que les heures sont comprises entre 0 et 23, et les minutes entre 0 et 59
@@ -81,18 +83,18 @@ public class Match {
         String[] checkDep = heureDeb.split(":");
         int hourDep = Integer.parseInt(checkDep[0]);
         int minuteDep = Integer.parseInt(checkDep[1]);
-
+        
         String[] checkArr = heureFin.split(":");
         int hourArr = Integer.parseInt(checkArr[0]);
         int minuteArr = Integer.parseInt(checkArr[1]);
-
+        
         if ((hourDep > 23 || hourDep < 0 || minuteDep > 59 || minuteDep < 0)
-                || (hourArr > 23 || hourArr < 0 || minuteArr > 59 || minuteArr < 0)) {
+        || (hourArr > 23 || hourArr < 0 || minuteArr > 59 || minuteArr < 0)) {
             return false;
         }
         return true;
     }
-
+    
     /**
      * Verifie que le format de la date est bien le bon
      * Cad que le jour est compris entre 1 et 31, le mois entre 1 et 12
@@ -104,13 +106,13 @@ public class Match {
         String[] checkDate = date.split("-");
         int day = Integer.parseInt(checkDate[2]);
         int month = Integer.parseInt(checkDate[1]);
-
+        
         if (day > 31 || day < 1 || month > 12 || month < 1) {
             return false;
         }
         return true;
     }
-
+    
     /**
      * Getter de l'attribut date
      * 
@@ -119,7 +121,7 @@ public class Match {
     public String getDate() {
         return date;
     }
-
+    
     /**
      * Setter de l'attribut date
      * 
@@ -128,7 +130,7 @@ public class Match {
     public void setDate(String date) {
         this.date = date;
     }
-
+    
     /**
      * Setter de l'attribut heureDeb
      * 
@@ -137,7 +139,7 @@ public class Match {
     public void setHeureDeb(String heureDeb) {
         this.heureDeb = heureDeb;
     }
-
+    
     /**
      * Setter de l'attribut heureDeb
      * 
@@ -146,7 +148,7 @@ public class Match {
     public String getHeureDeb() {
         return heureDeb;
     }
-
+    
     /**
      * Setter de l'attribut heureFin
      * 
@@ -155,7 +157,7 @@ public class Match {
     public void setHeureFin(String heureFin) {
         this.heureFin = heureFin;
     }
-
+    
     /**
      * Getter de l'attribut heureFin
      * 
@@ -164,7 +166,7 @@ public class Match {
     public String getHeureFin() {
         return heureFin;
     }
-
+    
     /**
      * Getter de l'attribut circuit
      * 
@@ -173,7 +175,7 @@ public class Match {
     public Circuit getCircuit() {
         return circuit;
     }
-
+    
     /**
      * Setter de l'attribut circuit
      * 
@@ -182,7 +184,7 @@ public class Match {
     public void setCircuit(Circuit circuit) {
         this.circuit = circuit;
     }
-
+    
     /**
      * Getter de l'attribut nbJoueursMax
      * 
@@ -191,7 +193,7 @@ public class Match {
     public int getNbJoueursMax() {
         return nbJoueursMax;
     }
-
+    
     /**
      * Setter de l'attribut nbJoueursMax
      * 
@@ -200,7 +202,7 @@ public class Match {
     public void setNbJoueursMax(int nbJoueursMax) {
         this.nbJoueursMax = nbJoueursMax;
     }
-
+    
     /**
      * Getter de l'attribut participant
      * 
@@ -208,6 +210,14 @@ public class Match {
      */
     public ArrayList<Adherent> getParticipant() {
         return participant;
+    }
+    
+    public Adherent getGagnant() {
+        return gagnant;
+    }
+
+    public void setGagnant(Adherent gagnant) {
+        this.gagnant = gagnant;
     }
 
     /**
@@ -218,7 +228,7 @@ public class Match {
     public void setParticipant(ArrayList<Adherent> participant) {
         this.participant = participant;
     }
-
+    
     /**
      * Ajoute un adherent a la liste de participant
      * 
@@ -231,7 +241,7 @@ public class Match {
             throw new TooManyParticipant("Le nombre de participants est deja atteint");
         }
     }
-
+    
     /**
      * Enleve un adherent de la liste de participant
      * 
