@@ -9,8 +9,7 @@
 
     $con = connect_bd();
 
-    $sql = "INSERT INTO `reservation` (`date`, `heureDebut`, `heureFin`, `nombreParticipant`, `Circuit_idCircuit`, `Adherent_Personne_idPersonne`, `autorisation`) VALUES (:date, :heureDebut, :heureFin, :nombreParticipant, :idCircuit, :idPersonne, 0)";
-    echo $sql;
+    $sql = "SET FOREIGN_KEY_CHECKS=0; INSERT INTO `reservation` (`date`, `heureDebut`, `heureFin`, `nombreParticipant`, `Circuit_idCircuit`, `Adherent_Personne_idPersonne`) VALUES (:date, :heureDebut, :heureFin, :nombreParticipant, :idCircuit, :idPersonne); SET FOREIGN_KEY_CHECKS=1;";
     $values = [
         "date" => $_POST["date"],
         "heureDebut" => $_POST["heureDebut"] . ":00",
@@ -19,9 +18,6 @@
         "idCircuit" => $_POST["idCircuit"],
         "idPersonne" => $_SESSION["id"]
     ];
-    foreach ($values as $key => $value) {
-        echo $key . " : " . $value;
-    }
 
     $stmt = $con->prepare($sql);
     $res = $stmt->execute($values);
@@ -30,6 +26,6 @@
         exit("Erreur");
     }
 
-    exit("Réussie");
+    exit(header('Location: reservation.php'));
 
 ?>

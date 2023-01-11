@@ -153,7 +153,7 @@ require_once("login.php");
                 <ul class="list-unstyled">
                     <li><a href="accueil.php"><b>Accueil</b></a></li>
                     <li><a href="actu.php"><b>Actualités</b></a></li>
-                    <li><a href="event.php"><b>Evenements</b></a></li>
+                    <li><a href="event.php"><b>Évènements</b></a></li>
 
                     <li><a href="partenaire.php"><b>Partenaires</b></a></li>
                     <li><a href="reservation.php"><b>Réservation</b></a></li>
@@ -163,7 +163,7 @@ require_once("login.php");
                     //si l'utilisateur est connecté, on affiche le bouton du profil et de déconnexion
                     if (isset($_SESSION["connected"]) && $_SESSION["connected"] == true) {
                         echo "<li><a class='button1' href='profil.php'><b>Profil</b></a></li>";
-                        echo "<li><a class='button1' href='logout.php'><b>Deconnexion</b></a></li>";
+                        echo "<li><a class='button1' href='logout.php'><b>Déconnexion</b></a></li>";
                     } else {
                         echo "<li><a onClick=\"register()\" href=#><b>Inscription</b></a></li>";
                         echo "<a class='button1' onClick='login();' href=#><b>Connexion</b></a>";

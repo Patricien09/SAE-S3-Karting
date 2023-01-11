@@ -39,74 +39,77 @@
             </div>";
         } 
         else {
-            echo "<div id='contenu'>
-                <h1>Vos réservations</h1>
-                <div class='event-list'>
-                    <ul class='events'>";
-                    foreach ($row as $res) {
-                        //On récupère les circuits de la réservation
-                        $sql = "SELECT * FROM `circuit` WHERE `idCircuit` = :idCircuit";
-                        $stmtCirc = $con->prepare($sql);
+            echo "
+            <div id='contenu'>
+                <div>
+                    <h1>Vos réservations</h1>
+                    <div class='event-list'>
+                        <ul class='events'>";
+                        foreach ($row as $res) {
+                            //On récupère les circuits de la réservation
+                            $sql = "SELECT * FROM `circuit` WHERE `idCircuit` = :idCircuit";
+                            $stmtCirc = $con->prepare($sql);
 
-                        $values = [
-                            "idCircuit" => $res["Circuit_idCircuit"]
-                        ];
+                            $values = [
+                                "idCircuit" => $res["Circuit_idCircuit"]
+                            ];
 
-                        $res3 = $stmtCirc->execute($values);
+                            $res3 = $stmtCirc->execute($values);
 
-                        if (!$res3) {
-                            echo "Erreur lors de la récupération des circuits";
+                            if (!$res3) {
+                                echo "Erreur lors de la récupération des circuits";
+                            }
+
+                            $rowCirc = $stmtCirc->fetch();
+                            echo "<li class='event'>";
+                            echo "<h2 style=\" color: var(--yellowColor);\">" . $res["date"] . "</h2>";
+                            echo "<p> Nombre de places réservées : " . $res["nombreParticipant"] . "</p>";
+                            echo "<p> Circuit : " . $rowCirc["nom"] . "</p>";
+                            echo "</li>";
                         }
-
-                        $rowCirc = $stmtCirc->fetch();
-                        echo "<li class='event'>";
-                        echo "<h2 style=\" color: var(--yellowColor);\">" . $res["date"] . "</h2>";
-                        echo "<p> Nombre de places réservées : " . $res["nombreParticipant"] . "</p>";
-                        echo "<p> Circuit : " . $rowCirc["nom"] . "</p>";
-                        echo "</li>";
-                    }
-                    echo "</ul>
-                </div>
-        </div>";
+                        echo "</ul>
+                        </div>
+                </div>";
         }
     }
 
     ?>
 
-    <div id="contenu">
-    <h1>Ajouter une réservation</h1>
-    <form action='addReservation.php' method='post'>
+        <div class="addReserv">
+            <h1>Ajouter une réservation</h1>
+            <form action='addReservation.php' method='post'>
 
-        <label for='date'>Date</label>
-        <input type='date' name='date' id='date' required><br>
+                <label for='date'>Date</label>
+                <input type='date' name='date' id='date' required><br>
 
-        <label for='heureDebut'>Heure de début</label>
-        <input type='time' name='heureDebut' id='heureDebut' required><br>
+                <label for='heureDebut'>Heure de début</label>
+                <input type='time' name='heureDebut' id='heureDebut' required><br>
 
-        <label for='heureFin'>Heure de fin</label>
-        <input type='time' name='heureFin' id='heureFin' required><br>
+                <label for='heureFin'>Heure de fin</label>
+                <input type='time' name='heureFin' id='heureFin' required><br>
 
-        <label for='nbrPlace'>Nombre de places</label>
-        <input type='text' name='nombreParticipant' id='nombreParticipant' required><br>
+                <label for='nbrPlace'>Nombre de places</label>
+                <input type='text' name='nombreParticipant' id='nombreParticipant' required><br>
 
-        <label for='idCircuit'>Circuit</label>
-        <select name='idCircuit' id='idCircuit' required>
-            <?php
-                $sql = "SELECT * FROM Circuit";
-                $stmt = $con->prepare($sql);
-                $res = $stmt->execute();
-                if (!$res) {
-                    echo "Erreur lors de la récupération des circuits";
-                }
-                $row = $stmt->fetchAll();
-                foreach ($row as $circ) {
-                    echo "<option value='" . $circ["idCircuit"] . "'>" . $circ["nom"] . "</option>";
-                }
-            ?>
-        </select><br>
-        
-        <input type='submit' value='Ajouter'>
-    </form>
+                <label for='idCircuit'>Circuit</label>
+                <select name='idCircuit' id='idCircuit' required>
+                    <?php
+                        $sql = "SELECT * FROM Circuit";
+                        $stmt = $con->prepare($sql);
+                        $res = $stmt->execute();
+                        if (!$res) {
+                            echo "Erreur lors de la récupération des circuits";
+                        }
+                        $row = $stmt->fetchAll();
+                        foreach ($row as $circ) {
+                            echo "<option value='" . $circ["idCircuit"] . "'>" . $circ["nom"] . "</option>";
+                        }
+                    ?>
+                </select><br>
+                
+                <input type='submit' value='Ajouter'>
+            </form>
+        </div>
     </div>
 
     

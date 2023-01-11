@@ -33,8 +33,8 @@
 ?>
 
 <div id="contenu">
-    <h1> Evenements </h1>
-    <h2> A venir : </h2>
+    <h1> Évènements </h1>
+    <h2> À venir : </h2>
     <div class="event-list">
         <ul class="events">
             <?php
@@ -87,7 +87,7 @@
                             echo "<button id='" . $row["idMatch"] . "' class='registerMatch' onclick='registerMatch(" . $row["idMatch"] . "," . $_SESSION["id"] . ",false)'> S'inscrire </button>";
                         }
                     }
-                    echo "<small id=\"matchError" . $row["idMatch"] . "\"> </small>";
+                    echo "<small id='matchError" . $row["idMatch"] . "' style='color: red; '> </small>";
                     echo "</li>";
                 }
             ?>
