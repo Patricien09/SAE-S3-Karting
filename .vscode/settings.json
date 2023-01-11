@@ -1,9 +1,7 @@
 {
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "lib\\junit-platform-console-standalone-1.9.1.jar",
-        "lib\\mysql-connector-java-8.0.30.jar",
-        "src\\javaPlanning\\lib\\junit-platform-console-standalone-1.9.1.jar",
-        "src\\javaPlanning\\lib\\mysql-connector-java-8.0.30.jar"
+        "java\\javaPlanning\\lib\\junit-platform-console-standalone-1.9.1.jar",
+        "java\\javaPlanning\\lib\\mysql-connector-java-8.0.30.jar"
     ],
 }

@@ -19,7 +19,6 @@ body h1{
 }
 
 
-
 body #contenu{
     min-height: 100vh;  
     margin: 15px;
@@ -34,20 +33,6 @@ body #contenu h1{
     text-align: center;
 }
 
-.midTitle{
-    margin-top: 10px;
-    margin-bottom: 10px;
-    font-size: 30px;
-    display: inline-block;
-}
-
-.par{
-    color: rgb(255, 191, 0);
-}
-
-.barre{
-    color: #0288D1;
-}
 
 body #contenu #blink{
     margin-top: 280px;
@@ -69,6 +54,7 @@ body #contenu #blink{
     max-width: 80%;
     height: 100%;
     scroll-behavior: smooth;
+    padding-left: 20px;
 }
 
 .event {
@@ -135,17 +121,17 @@ body #contenu #blink{
         color: rgb(132, 0, 255);
         font-size: 24px;
     }
-
+    
     50% {
         color: rgb(25, 0, 255);
         font-size: 26px;
     }
-
+    
     75% {
         color: blueviolet;
         font-size: 24px;
     }
-
+    
     100% {
         color: rgb(255, 0, 0);
         font-size: 22px;
@@ -162,6 +148,7 @@ body #contenu #blink{
     height: 59px;
 }
 
+/* For accueil.php */
 .vids {
     margin: auto;
     float: right;
@@ -179,4 +166,15 @@ body #contenu #blink{
     font-size: 20px;
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+.midTitle{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 30px;
+    display: inline-block;
+}
+
+.par{
+    color: rgb(255, 191, 0);
 }

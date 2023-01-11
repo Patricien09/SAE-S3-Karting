@@ -94,15 +94,12 @@ header{
     color: black;
 }
 
-a.logo {
+.logo {
     margin-left: 10px;
-}
-
-a.logo img{
     height: 75px; 
     width: auto;
+    max-width: 90%;
 }
-
 
 #burger {
     margin-right: 10px;

@@ -37,7 +37,7 @@ if (isset($_POST["name"]) && isset($_POST["forename"]) && isset($_POST["adresse"
     $hash = password_hash($password, PASSWORD_DEFAULT);
 
     // Insère les données dans la table personne
-    $sql = htmlspecialchars("INSERT INTO `personne` (`nom`, `prenom`, `adresse`, `telephone`, `mail`, `mdp`, `mdpClair`) VALUES (:name, :forename, :adresse, :phone, :mail, :password, :password2)");
+    $sql = htmlspecialchars("INSERT INTO `personne` (`nom`, `prenom`, `adresse`, `telephone`, `mail`, `mdp`) VALUES (:name, :forename, :adresse, :phone, :mail, :password)");
 
     $values = [
         ":name" => $name,
@@ -46,7 +46,6 @@ if (isset($_POST["name"]) && isset($_POST["forename"]) && isset($_POST["adresse"
         ":phone" => $phone,
         ":mail" => $mail,
         ":password" => $hash,
-        ":password2" => $password
     ];
 
     $stmt = $connexion->prepare($sql);

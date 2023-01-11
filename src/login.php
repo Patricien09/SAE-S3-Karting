@@ -57,7 +57,6 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
         ?>
 
             <script>
-                alert("Connexion réussie");
                 window.location.replace("accueil.php");
             </script>
 

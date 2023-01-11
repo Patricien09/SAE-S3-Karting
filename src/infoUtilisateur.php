@@ -40,7 +40,7 @@ function infoUtilisateur()
                         // Vérifie qu'il existe une image dans ce dossier, sinon affiche une image par défaut
                         if ($result = glob("users/" . $_SESSION["username"] . "/profil.*")) {
                             // Ajoute le paramètre t=... pour éviter que le navigateur utilise une image en cache
-                            echo "<img src='" . $result[0] . "?t=" . time() . "' alt='Photo de profil' width='200' height='200'>";
+                            echo "<img src='" . $result[0] . "?t=" . time() . "' alt='Photo de profil' class='logo'>";
                         } else {
                             echo "<img src='logos/kart.jpg' alt='Photo de profil' width='200' height='200'>";
                         }
