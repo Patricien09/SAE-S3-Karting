@@ -26,20 +26,23 @@
 
             <h2 class="midTitle"> Vous pouvez aussi regarder quelques vidéos de notre club </h2><br>
             
-            <video class="vids" width = "400" height = "300" controls>
-                <source src="im_vid/KartingPres.mp4" type="video/mp4">
-            </video>
-
-            <video class="vids" width = "400" height = "300" controls>
-                <source src="im_vid/KartingPres3.mp4" type="video/mp4">
-            </video>
-
-            <video class="vids" width = "400" height = "300" controls>
-                <source src="im_vid/KartingPres2.mp4" type="video/mp4">
-            </video><br>
-
+            <div id="videos" style="display:flex;">
+                <video class="vids" width = "400" height = "300" controls>
+                    <source src="im_vid/KartingPres.mp4" type="video/mp4">
+                </video>
+                
+                <video class="vids" width = "400" height = "300" controls>
+                    <source src="im_vid/KartingPres3.mp4" type="video/mp4">
+                </video>
+                
+                <video class="vids" width = "400" height = "300" controls>
+                    <source src="im_vid/KartingPres2.mp4" type="video/mp4">
+                </video>
+            </div>
+            <br>
+            
             <h2 class="midTitle">Vous pouvez aussi regarder quelques photos de notre club </h2><br>
-
+            
             <img class="IM" src="im_vid/photoKarting.jpg" alt="Photo du karting">
             <div class="im-content">
                 <p class="parIM">Championnat régional en KZ2</p>

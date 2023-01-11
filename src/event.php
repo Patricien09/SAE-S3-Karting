@@ -80,8 +80,10 @@
                             // On vérifie si l'utilisateur est inscrit à l'événement
                             $isRegistered = false;
                             foreach ($rowId as $id) {
-                                if ($id["Adherent_Personne_idPersonne"] == $_SESSION["id"]) {
-                                    $isRegistered = true;
+                                if (isset($_SESSION["connected"]) && $_SESSION["connected"]) {
+                                    if ($id["Adherent_Personne_idPersonne"] == $_SESSION["id"]) {
+                                        $isRegistered = true;
+                                    }
                                 }
                             }
 

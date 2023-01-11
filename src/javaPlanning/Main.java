@@ -258,7 +258,8 @@ public class Main implements ActionListener {
         mainJFrame.add(JPButtons, BorderLayout.NORTH);
 
         mainJFrame.setVisible(true);
-        mainJFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainJFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
 
         // JFrame pour update un element dans la liste
         updateJFrame = new JFrame("Page d'update");
@@ -315,7 +316,7 @@ public class Main implements ActionListener {
         reservationJFrame.add(RLists, BorderLayout.CENTER);
         reservationJFrame.add(RButtons, BorderLayout.SOUTH);
         reservationJFrame.pack();
-        reservationJFrame.setVisible(true);
+        reservationJFrame.setVisible(false);
     }
 
     public void actionPerformed(ActionEvent e) {
