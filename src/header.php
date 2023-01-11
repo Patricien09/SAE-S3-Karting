@@ -139,6 +139,8 @@ require_once("login.php");
             } else {
                 echo "<a href='accueil.php'><img src='logos/kart.jpg' class='logo'></a>";
             }
+        } else {
+            echo "<a href='accueil.php'><img src='logos/kart.jpg' class='logo'></a>";
         }
         ?>
 
@@ -150,7 +152,7 @@ require_once("login.php");
             <div class="wrapper">
                 <ul class="list-unstyled">
                     <li><a href="accueil.php"><b>Accueil</b></a></li>
-                    <li><a href="multi.php"><b>Multimédia</b></a></li>
+                    <li><a href="actu.php"><b>Actualités</b></a></li>
                     <li><a href="event.php"><b>Evenements</b></a></li>
 
                     <li><a href="partenaire.php"><b>Partenaires</b></a></li>

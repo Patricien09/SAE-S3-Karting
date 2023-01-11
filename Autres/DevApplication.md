@@ -4,6 +4,13 @@ ___Wittmann Grégory / Rouillon Tom___
 
 <h1 align="center"> TD Saé Développement d'une Application </h1>
 
+<!-- TODO:
+- Droit du logiciel (comment il est protégé)
+- Schéma propriété intelectuelle et positionner oeuvre (pla + industrielle (logo -> pas de dépôt car libre de droit))
+- Quoi et comment la bdd est protégée
+- Lister données à récupérer (Pas accord de la CNIL normalement, obligation sécurité/stockage...)
+- Logiciel non brevetable donc propriété intelectuelle -->
+
 ## Partie 1 : Propriété intellectuelle
 
 <h3 align="center"> 1.1 : Positionner notre projet dans le cadre de la propriété intellectuelle </h3>
@@ -55,6 +62,8 @@ Notre projet s'inscrit dans le cadre du droit du numérique car nous récupéron
 
     -Il y aura des cookies pour tracer les utilisateurs et les données qu'ils ont consultées.
 
+    - mesure duréer conservation/confidentialité/sécurité
+
 ## Conclusion
 
     - Nous avons vu que notre projet est protégé par la propriété intellectuelle.
@@ -67,4 +76,4 @@ Notre projet s'inscrit dans le cadre du droit du numérique car nous récupéron
     l'usurpation d'identité. Nous avons vu que nous devons prendre des mesures de sécurité pour 
     protéger nos données personnelles.
 
-    - De plus comme ce projet est en binôme, les droits sont donc répartis entre les deux personnes.
+    - De plus comme ce projet est en binôme, les droits sont donc répartis entre les deux personnes. Donc oeuvre de collaboration au lieu de collective

@@ -13,16 +13,16 @@
 
     <h2 class="midTitle"> Vous pouvez aussi regarder quelques vidéos de notre club </h2><br>
     
-    <div id="videos" style="display:flex;">
-        <video class="vids" width = "400" height = "300" controls>
+    <div id="videos" class="videos">
+        <video class="vids" width = "300" height = "300" controls>
             <source src="im_vid/KartingPres.mp4" type="video/mp4">
         </video>
         
-        <video class="vids" width = "400" height = "300" controls>
+        <video class="vids" width = "300" height = "300" controls>
             <source src="im_vid/KartingPres3.mp4" type="video/mp4">
         </video>
         
-        <video class="vids" width = "400" height = "300" controls>
+        <video class="vids" width = "300" height = "300" controls>
             <source src="im_vid/KartingPres2.mp4" type="video/mp4">
         </video>
     </div>
@@ -31,21 +31,27 @@
     <h2 class="midTitle">Vous pouvez aussi regarder quelques photos de notre club </h2>
     <br>
     
-    <img class="IM" src="im_vid/photoKarting.jpg" alt="Photo du karting">
-    <div class="im-content">
-        <p class="parIM">Championnat régional en KZ2</p>
-    </div>
+    <div id="images" class="images">
+        <div class="IM">
+            <img src="im_vid/photoKarting.jpg" alt="Photo du karting">
+            <div class="im-content">
+                <p class="parIM">Championnat régional en KZ2</p>
+            </div>
+        </div>
 
+        <div class="IM">
+            <img src="im_vid/photoKarting2.jpg" alt="Photo du karting">
+            <div class="im-content">
+                <p class="parIM">Circuit à la fin de la journée</p>
+            </div>
+        </div>
 
-    <img class="IM" src="im_vid/photoKarting2.jpg" alt="Photo du karting">
-    <div class="im-content">
-        <p class="parIM">Circuit à la fin de la journée</p>
-    </div>
-
-
-    <img class="IM" src="im_vid/photoKarting3.jpg" alt="Photo du karting">
-    <div class="im-content">
-        <p class="parIM">Essai du nouveau PRAGA KA100</p>
+        <div class="IM">
+            <img src="im_vid/photoKarting3.jpg" alt="Photo du karting">
+            <div class="im-content">
+                <p class="parIM">Essai du nouveau PRAGA KA100</p>
+            </div>
+        </div>
     </div>
     
 </div>
