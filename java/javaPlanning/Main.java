@@ -632,20 +632,32 @@ public class Main implements ActionListener {
                 rs2.next();
                 String circuitName = rs2.getString("nom");
 
+                // Recupere le nom de l'adherent
+                Statement stmt3 = con.createStatement();
+                ResultSet rs3 = stmt3.executeQuery("SELECT * FROM personne WHERE idPersonne = " + adherent);
+                rs3.next();
+                String adherentName = rs3.getString("nom") + " " + rs3.getString("prenom");
+
                 try {
                     // Verifie que la reservation est possible
                     if (!planning.verifierDispo(new Match(date, debut, fin, ListCircuit.getCircuit(circuitName), 0))) {
                         System.out.println("Reservation " + idR + " refusée : circuit déjà réservé");
+
+                        JOptionPane.showMessageDialog(null, "La réservation " + idR + " a été refusée car le circuit " + circuitName + " est déjà réservé à cette date et à cette heure", "Réservation refusée", JOptionPane.INFORMATION_MESSAGE);
+                    
                         // On refusera la reservation
                         selectedLine = String.valueOf(idR);
                         RRefuser.doClick();
                         continue;
                     }
-                } catch (CircuitExistException e) {
+                } catch (Exception e) {
                     System.out.println("Reservation " + idR + " refusée " + e.getMessage());
-                    continue;
-                } catch (IllegalArgumentException e2) {
-                    System.out.println("Reservation " + idR + " refusée " + e2.getMessage());
+
+                    JOptionPane.showMessageDialog(null, "La réservation " + idR + " a été refusée car : " + e.getMessage(), "Réservation refusée", JOptionPane.INFORMATION_MESSAGE);
+
+                    // On refusera la reservation
+                    selectedLine = String.valueOf(idR);
+                    RRefuser.doClick();
                     continue;
                 }
 
@@ -655,8 +667,8 @@ public class Main implements ActionListener {
                 JLabel debutLabel = new JLabel(debut, SwingConstants.CENTER);
                 JLabel finLabel = new JLabel(fin, SwingConstants.CENTER);
                 JLabel nbrPartLabel = new JLabel(nbrPart, SwingConstants.CENTER);
-                JLabel circuitLabel = new JLabel(circuit, SwingConstants.CENTER);
-                JLabel adherentLabel = new JLabel(adherent, SwingConstants.CENTER);
+                JLabel circuitLabel = new JLabel(circuitName, SwingConstants.CENTER);
+                JLabel adherentLabel = new JLabel(adherentName, SwingConstants.CENTER);
 
                 dateLabel.setBorder(BorderFactory.createLineBorder(Color.black));
                 debutLabel.setBorder(BorderFactory.createLineBorder(Color.black));

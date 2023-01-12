@@ -4,24 +4,21 @@
 
 footer .left{
     margin: auto;
-    margin-right: 10px;
-    display: block;
-    float: left;
+    display: flex;
+}
+
+footer nav {
+    margin:auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: fit-content;
 }
 
 footer .center{
     margin: auto;
     font-size: min(15px);
     color: rgb(255, 191, 0);
-}
-
-footer nav {
-    margin:auto;
-    margin-right:10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: fit-content;
 }
 
 .ligne {
@@ -31,13 +28,11 @@ footer nav {
 
 footer .right{
     margin: auto;
-    margin-left: 10px;
     float: right;
 }
 
 footer .right h2{
     margin: auto;
-    margin-left: 10px;
     font-size: min(15px);
     color: rgb(255, 191, 0);
 }
@@ -79,4 +74,10 @@ footer{
     border-width: 1px;
     border-style: solid;
     display: flex;
+}
+
+@media screen AND (max-width: 950px) {
+    footer p, footer a, footer h2 {
+        font-size: 10px;
+    }
 }

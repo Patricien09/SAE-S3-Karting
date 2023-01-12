@@ -4,21 +4,19 @@
 
 <?php
     //Si l'utilisateur n'est pas connecté, on affiche un message
-    if (!isset($_SESSION["connected"]) || $_SESSION["connected"] == false) {
+    if (!isset($_SESSION["connected"]) || !$_SESSION["connected"]) {
         echo "<div id='contenu'>
             <h1>Réservation</h1>
 
             <p id='blink'>VOUS DEVEZ VOUS CONNECTER POUR VOIR LES RESERVATIONS</p>
         </div>";
     }
-?>
-            
-<?php
-   require_once("connectBD.php");
-   $con = connect_bd();    
 
-   //Si l'utilisateur est connecté 
-    if (isset($_SESSION["connected"]) && $_SESSION["connected"] == true) {
+    require_once("connectBD.php");
+    $con = connect_bd();    
+
+    //Si l'utilisateur est connecté 
+    if (isset($_SESSION["connected"]) && $_SESSION["connected"]) {
         //On récupère les réservations de l'utilisateur
         $sql = "SELECT * FROM Reservation WHERE Adherent_Personne_idPersonne = :idPersonne";
         $stmt = $con->prepare($sql);
@@ -35,8 +33,7 @@
             echo "<div id='contenu'>
             <h1>Réservation</h1>
     
-            <p id='blink'>VOUS N'AVEZ AUCUNE RESERVATION</p>
-            </div>";
+            <p id='blink'>VOUS N'AVEZ AUCUNE RESERVATION</p>";
         } 
         else {
             echo "
@@ -65,16 +62,24 @@
                             echo "<h2 style=\" color: var(--yellowColor);\">" . $res["date"] . "</h2>";
                             echo "<p> Nombre de places réservées : " . $res["nombreParticipant"] . "</p>";
                             echo "<p> Circuit : " . $rowCirc["nom"] . "</p>";
+                            switch($res['autorisation']) {
+                                case 0:
+                                    echo "<p>Pas encore vérifiée</p>";
+                                    break;
+                                case 1:
+                                    echo "<p>Autorisée</p>";
+                                    break;
+                                default:
+                                    echo "<p>Refusée</p>";
+                                    break;
+                            }
                             echo "</li>";
                         }
                         echo "</ul>
                         </div>
                 </div>";
         }
-    }
-
     ?>
-
         <div class="addReserv">
             <h1>Ajouter une réservation</h1>
             <form action='addReservation.php' method='post'>
@@ -111,11 +116,7 @@
             </form>
         </div>
     </div>
-
-    
-               
-
-
-<?php 
+<?php
+    }
     require_once("footer.php");
 ?>
