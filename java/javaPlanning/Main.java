@@ -1,6 +1,9 @@
 package javaPlanning;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -376,21 +379,55 @@ public class Main implements ActionListener {
         // Quand le bouton pour accéder à l'écran d'update est sélectionné
         else if (e.getSource() == buttonUpdate) {
             if (selectedLine != null) {
-                // Recupere le match choisit dans la liste
-                Match m = planning.getMatchs().get(Integer.valueOf(selectedLine) - 1);
-
-                // Rempli les champs avec les infos du match
-                TFdate.setText(m.getDate());
-                TFdebut.setText(m.getHeureDeb());
-                TFfin.setText(m.getHeureFin());
-
-                // Rempli la comboBox des Participants
-                for (Adherent a : m.getParticipant()) {
-                    changerGagnantCB.addItem(a);
+                try {
+                    // Vide la comboBox des Participants
+                    changerGagnantCB.removeAllItems();
+                    // Recupere le match choisit dans la liste
+                    Match m = planning.getMatchs().get(Integer.valueOf(selectedLine) - 1);
+                    
+                    // Rempli les champs avec les infos du match
+                    TFdate.setText(m.getDate());
+                    TFdebut.setText(m.getHeureDeb());
+                    TFfin.setText(m.getHeureFin());
+                    
+                    // Si le match est deja passé, on ne peut pas le modifier
+                    LocalTime timeNow = LocalTime.now(ZoneId.of("Europe/Paris"));
+                    LocalTime timeMatch = LocalTime.parse(m.getHeureFin());
+                    
+                    LocalDate dateNow = LocalDate.now(ZoneId.of("Europe/Paris"));
+                    LocalDate dateMatch = LocalDate.parse(m.getDate());
+    
+                    // Si la date du jour est supérieure à la date du match
+                    // Et si l'heure du jour est supérieure à l'heure de fin du match
+                    // N'affiche que la boite pour changer le gagnant
+                    if (dateNow.isAfter(dateMatch) || (timeNow.isAfter(timeMatch) && dateNow.equals(dateMatch))) {
+                        TFdate.setEditable(false);
+                        TFdebut.setEditable(false);
+                        TFfin.setEditable(false);
+                        circuitComboBox.setEnabled(false);
+                        nbrPart.setEditable(false);
+                        changerGagnantCB.setEnabled(true);
+                    } else {
+                        TFdate.setEditable(true);
+                        TFdebut.setEditable(true);
+                        TFfin.setEditable(true);
+                        circuitComboBox.setEnabled(true);
+                        nbrPart.setEditable(true);
+                        changerGagnantCB.setEnabled(false);
+                    }
+    
+                    changerGagnantCB.addItem(null);
+    
+                    // Rempli la comboBox des Participants
+                    for (Adherent a : m.getParticipant()) {
+                        changerGagnantCB.addItem(a);
+                    }
+    
+                    // Affiche la page d'update
+                    updateJFrame.setVisible(true);
+                } catch (Exception wte) {
+                    JOptionPane.showMessageDialog(null, wte.getMessage(), "ERREUR", JOptionPane.ERROR_MESSAGE);
                 }
-
-                // Affiche la page d'update
-                updateJFrame.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(null, "Selectionnez une ligne", "ERREUR", JOptionPane.ERROR_MESSAGE);
             }
@@ -399,6 +436,13 @@ public class Main implements ActionListener {
         // Quand le bouton pour supprimer un element est selectionne
         else if (e.getSource() == buttonDelete) {
             if (selectedLine != null) {
+                // Demande confirmation
+                int dialogButton = JOptionPane.YES_NO_OPTION;
+                int dialogResult = JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment supprimer ce match ?", "Confirmation", dialogButton);
+                if (dialogResult == JOptionPane.NO_OPTION) {
+                    return;
+                }
+
                 Match m = planning.getMatchs().get(Integer.valueOf(selectedLine) - 1);
                 planning.supprimerMatch(m);
 
@@ -423,14 +467,14 @@ public class Main implements ActionListener {
             }
         }
 
-        // Quand le bouton pour effectuer la modification d'une ligne dans la bdd est
-        // selectionne
+        // Quand le bouton pour effectuer la modification d'une ligne dans la bdd est selectionne
         else if (e.getSource() == modifier) {
             if (!TFdate.getText().equals("") && !TFdebut.getText().equals("") && !TFfin.getText().equals("")) {
                 String date = TFdate.getText();
                 String debut = TFdebut.getText();
                 String fin = TFfin.getText();
                 Adherent gagnant = (Adherent) changerGagnantCB.getItemAt(changerGagnantCB.getSelectedIndex());
+                String idGagnant = (gagnant == null) ? "NULL" : String.valueOf(gagnant.getId());
                 try {
                     Match tmp = planning.getMatchs().get(Integer.valueOf(selectedLine) - 1);
                     String oldDate = tmp.getDate();
@@ -446,7 +490,7 @@ public class Main implements ActionListener {
                     stmt.executeUpdate("SET FOREIGN_KEY_CHECKS=0");
                     
                     // Modifie la ligne dans la bdd
-                    String query = "UPDATE `match` SET `date` = '" + java.sql.Date.valueOf(date) + "', `heureDebut` = '" + java.sql.Time.valueOf(debut) + "', `heureFin` = '" + java.sql.Time.valueOf(fin) + "', `Gagnant` = " + gagnant.getId() + " WHERE `date` = '" + java.sql.Date.valueOf(oldDate) + "' AND `heureDebut` = '" + java.sql.Time.valueOf(oldDebut) + "' AND `heureFin` = '" + java.sql.Time.valueOf(oldFin) + "'";
+                    String query = "UPDATE `match` SET `date` = '" + java.sql.Date.valueOf(date) + "', `heureDebut` = '" + java.sql.Time.valueOf(debut) + "', `heureFin` = '" + java.sql.Time.valueOf(fin) + "', `Gagnant` = " + idGagnant + " WHERE `date` = '" + java.sql.Date.valueOf(oldDate) + "' AND `heureDebut` = '" + java.sql.Time.valueOf(oldDebut) + "' AND `heureFin` = '" + java.sql.Time.valueOf(oldFin) + "'";
                     
                     stmt.executeUpdate(query);
 
@@ -455,13 +499,12 @@ public class Main implements ActionListener {
 
                     refreshList(tmp, "update");
                     updateJFrame.setVisible(false);
-                } catch (WrongTimeException ex) {
-                    // Affiche une boite de dialogue d'erreur
-                    JOptionPane.showMessageDialog(null,
-                            "Erreur heures (heure de début>=heure de fin ou mauvaises valeurs d'entrée)", "ERREUR",
-                            JOptionPane.ERROR_MESSAGE);
-                } catch (SQLException e1) {
-                    System.err.println(e1.getMessage());
+                } catch (WrongTimeException e1) {
+                    JOptionPane.showMessageDialog(null, e1.getMessage(), "ERREUR", JOptionPane.ERROR_MESSAGE);
+                } catch (IllegalArgumentException e3) {
+                    JOptionPane.showMessageDialog(null, e3.getMessage(), "ERREUR", JOptionPane.ERROR_MESSAGE);
+                } catch (SQLException e4) {
+                    JOptionPane.showMessageDialog(null, e4.getMessage(), "ERREUR", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Un ou plusieurs paramètres sont vides", "ERREUR",
@@ -502,6 +545,13 @@ public class Main implements ActionListener {
         // Quand le bouton pour refuser une reservation est appuye
         else if (e.getSource() == RRefuser) {
             if (selectedLine != null) {
+                // Demande confirmation
+                int dialogButton = JOptionPane.YES_NO_OPTION;
+                int dialogResult = JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment supprimer ce match ?", "Confirmation", dialogButton);
+                if (dialogResult == JOptionPane.NO_OPTION) {
+                    return;
+                }
+                
                 try {
                     Statement stmt = con.createStatement();
 
@@ -553,6 +603,7 @@ public class Main implements ActionListener {
                 String finR = m.getHeureFin();
                 String nbrPartR = String.valueOf(m.getNbJoueursMax());
                 String circuitR = m.getCircuit().getName();
+                Adherent gagnantA = m.getGagnant();
 
                 final JButton JButtonId = new JButton(id);
                 JButtonId.addActionListener(this);
@@ -561,6 +612,7 @@ public class Main implements ActionListener {
                 final JLabel JLabelFin = new JLabel(finR, SwingConstants.CENTER);
                 final JLabel JLabelNbrPart = new JLabel(nbrPartR, SwingConstants.CENTER);
                 final JLabel JLabelCircuit = new JLabel(circuitR, SwingConstants.CENTER);
+                final JLabel JLabelGagnant = (gagnantA == null) ? new JLabel("", SwingConstants.CENTER) : new JLabel(gagnantA.getNom() + " " + gagnantA.getPrenom(), SwingConstants.CENTER);
 
                 JButtonId.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 JLabelTitle.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -568,6 +620,7 @@ public class Main implements ActionListener {
                 JLabelFin.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 JLabelNbrPart.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 JLabelCircuit.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                JLabelGagnant.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
                 JPListeEvents.add(JButtonId);
                 JPListeEvents.add(JLabelTitle);
@@ -575,6 +628,7 @@ public class Main implements ActionListener {
                 JPListeEvents.add(JLabelFin);
                 JPListeEvents.add(JLabelNbrPart);
                 JPListeEvents.add(JLabelCircuit);
+                JPListeEvents.add(JLabelGagnant);
                 break;
 
             case "delete":
@@ -597,7 +651,11 @@ public class Main implements ActionListener {
                 JLabel hFin = (JLabel) JPListeEvents.getComponent(7 * (Integer.valueOf(selectedLine)) + 3);
                 hFin.setText(m.getHeureFin());
                 JLabel gagnant = (JLabel) JPListeEvents.getComponent(7 * (Integer.valueOf(selectedLine)) + 6);
-                gagnant.setText(m.getGagnant().getNom() + " " + m.getGagnant().getPrenom());
+                if (m.getGagnant() != null) {
+                    gagnant.setText(m.getGagnant().getNom() + " " + m.getGagnant().getPrenom());
+                } else {
+                    gagnant.setText("");
+                }
                 break;
         }
 

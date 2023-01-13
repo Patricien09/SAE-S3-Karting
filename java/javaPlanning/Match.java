@@ -81,6 +81,11 @@ public class Match {
      */
     public boolean checkTimeFormat(String heureDeb, String heureFin) {
         String[] checkDep = heureDeb.split(":");
+
+        if (checkDep.length < 2 || checkDep.length > 3) {
+            return false;
+        }
+
         int hourDep = Integer.parseInt(checkDep[0]);
         int minuteDep = Integer.parseInt(checkDep[1]);
         
@@ -104,6 +109,11 @@ public class Match {
      */
     public boolean checkDateFormat(String date) {
         String[] checkDate = date.split("-");
+
+        if (checkDate.length != 3) {
+            return false;
+        }
+
         int day = Integer.parseInt(checkDate[2]);
         int month = Integer.parseInt(checkDate[1]);
         
@@ -216,6 +226,10 @@ public class Match {
         return gagnant;
     }
 
+    /**
+     * Setter de l'attribut gagnant
+     * @param gagnant
+     */
     public void setGagnant(Adherent gagnant) {
         this.gagnant = gagnant;
     }

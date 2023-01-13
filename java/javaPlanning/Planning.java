@@ -45,15 +45,16 @@ public class Planning {
     public void deplacerMatch(Match match, String date, String heureDebut, String heureFin) throws WrongTimeException {
         // Recopie le match dans une variable tampon, et garde l'index du match dans la liste
         Match tmp = new Match(match.getDate(), match.getHeureDeb(), match.getHeureFin(), match.getCircuit(), match.getNbJoueursMax());
+        int index = matchs.indexOf(match);
         supprimerMatch(match);
         if (verifierDispo(new Match(date, heureDebut, heureFin, match.getCircuit(), match.getNbJoueursMax()))) {
             match.setDate(date);
             match.setHeureDeb(heureDebut);
             match.setHeureFin(heureFin);
-            matchs.add(match);
+            matchs.add(index, match);
         } else {
             // Si on ne peut pas le deplacer, on remet le match dans la liste
-            matchs.add(tmp);
+            matchs.add(index, tmp);
             throw new WrongTimeException("Le match ne peut pas etre deplacé à cause de la date ou de l'heure");
         }
     }
