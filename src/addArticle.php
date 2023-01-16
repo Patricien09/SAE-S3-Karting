@@ -20,7 +20,7 @@ if (isset($_POST['title']) && isset($_POST['content'])) {
 
 <div id="contenu">
 
-    <form action="addArticle.php" method="post">
+    <form action="addArticle.php" method="post" class="addArticleForm">
         <label for ="title"> Titre de l'article : </label><br>
         <input type="text" name="title" id="title" required><br>
         <label for ="content"> Contenu de l'article : </label><br>

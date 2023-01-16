@@ -2,8 +2,8 @@
 
             <div class="left">
                 <nav class="footer">
-                    <a class="button" href="contacts.php"><b>Contact</b></a>
-                    <a class="button" href="aPropos.php"><b>A propos</b></a>
+                    <a class="buttons" href="contacts.php"><b>Contact</b></a>
+                    <a class="buttons" href="aPropos.php"><b>A propos</b></a>
                 </nav>
             </div>
             <span class="ligne"> </span>

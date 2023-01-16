@@ -4,6 +4,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -373,6 +374,7 @@ public class Main implements ActionListener {
 
         // Quand le bouton pour accéder à l'écran d'insertion est sélectionné
         else if (e.getSource() == buttonInsertionPage) {
+            nbrPart.setEditable(true);
             insertionJFrame.setVisible(true);
         }
 
@@ -404,14 +406,12 @@ public class Main implements ActionListener {
                         TFdate.setEditable(false);
                         TFdebut.setEditable(false);
                         TFfin.setEditable(false);
-                        circuitComboBox.setEnabled(false);
                         nbrPart.setEditable(false);
                         changerGagnantCB.setEnabled(true);
                     } else {
                         TFdate.setEditable(true);
                         TFdebut.setEditable(true);
                         TFfin.setEditable(true);
-                        circuitComboBox.setEnabled(true);
                         nbrPart.setEditable(true);
                         changerGagnantCB.setEnabled(false);
                     }
@@ -480,6 +480,9 @@ public class Main implements ActionListener {
                     String oldDate = tmp.getDate();
                     String oldDebut = tmp.getHeureDeb();
                     String oldFin = tmp.getHeureFin();
+
+                    LocalTime.parse(date);
+
                     planning.deplacerMatch(tmp, date, debut, fin);
 
                     tmp.setGagnant(gagnant);
@@ -505,6 +508,8 @@ public class Main implements ActionListener {
                     JOptionPane.showMessageDialog(null, e3.getMessage(), "ERREUR", JOptionPane.ERROR_MESSAGE);
                 } catch (SQLException e4) {
                     JOptionPane.showMessageDialog(null, e4.getMessage(), "ERREUR", JOptionPane.ERROR_MESSAGE);
+                } catch (DateTimeParseException e5) {
+                    JOptionPane.showMessageDialog(null, "Date invalide", "ERREUR", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Un ou plusieurs paramètres sont vides", "ERREUR",

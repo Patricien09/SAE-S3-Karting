@@ -9,7 +9,7 @@
 
     $con = connect_bd();
 
-    $sql = "SET FOREIGN_KEY_CHECKS=0; INSERT INTO `reservation` (`date`, `heureDebut`, `heureFin`, `nombreParticipant`, `Circuit_idCircuit`, `Adherent_Personne_idPersonne`) VALUES (:date, :heureDebut, :heureFin, :nombreParticipant, :idCircuit, :idPersonne); SET FOREIGN_KEY_CHECKS=1;";
+    $sql = htmlspecialchars("SET FOREIGN_KEY_CHECKS=0; INSERT INTO `reservation` (`date`, `heureDebut`, `heureFin`, `nombreParticipant`, `Circuit_idCircuit`, `Adherent_Personne_idPersonne`) VALUES (:date, :heureDebut, :heureFin, :nombreParticipant, :idCircuit, :idPersonne); SET FOREIGN_KEY_CHECKS=1;");
     $values = [
         "date" => $_POST["date"],
         "heureDebut" => $_POST["heureDebut"] . ":00",

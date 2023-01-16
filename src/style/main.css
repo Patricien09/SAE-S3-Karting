@@ -10,7 +10,8 @@ body {
     margin: 0;
     width: auto;
     height: auto;
-    background-image: url("https://www.toptal.com/designers/subtlepatterns/uploads/blackmamba.png");
+    /* Source de l'image : https://www.toptal.com/designers/subtlepatterns/uploads/blackmamba.png */
+    background-image: url("../logos/blackmamba.png");
 }
 
 body h1{
@@ -58,7 +59,7 @@ body #contenu #blink{
 }
 
 .event {
-    padding: 20px 20px 0px 20px;
+    padding: 20px 20px 20px 20px;
     list-style-type: none;
     width: 200px;
     border-right: solid var(--yellowColor) 1px;
@@ -81,19 +82,23 @@ body #contenu #blink{
     align-items: center;
 }
 
+.event a {
+    color: white;
+}
+
 /* Bouton pour s'inscrire */
 .registerMatch {
     margin: auto;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
     border-radius: 5px;
     background-color: var(--eventColor);
     transition: all 200ms ease;
     border: solid black 1px;
 }
 
-.registerMatch:hover, .addArticle:hover,.addReserv form input:last-child:hover {
+.registerMatch:hover, .addArticle:hover, .addReserv form input:last-child:hover, .addArticleForm input:last-child:hover {
     transform: scale(1.1);
-    border: none;
+    border: solid 1px var(--backColor);
     box-shadow:0 5px 8px rgba(3,169,244,0.25);
 	background:#0288D1;
 	background:-webkit-linear-gradient(left,#0288D1 0%,#2196F3 100%);
@@ -334,6 +339,39 @@ body #contenu #blink{
     margin-bottom: 0px;
     width: 50%;
     text-align: center;
+}
+
+/* Pour addArticle.php */
+
+.addArticleForm {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    max-width: 40%;
+    padding: 20px;
+    border-radius: 20px;
+    background-color: var(--eventColor);
+    align-items: center;
+}
+
+.addArticleForm label {
+    margin-top: 20px;
+    min-width: 100%;
+    text-align: center;
+    border-bottom: solid 1px var(--yellowColor);
+}
+
+.addArticleForm textarea, .addArticleForm input {
+    min-width: 100%;
+}
+
+.addArticleForm input:last-child {
+    margin-top: 30px;
+    min-width: fit-content;
+    transition: all 200ms ease;
+    border-radius: 5px;
+    background-color: var(--eventColor);
+    border: 1px solid black;
 }
 
 /* Responsive */

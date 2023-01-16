@@ -76,6 +76,15 @@ footer{
     display: flex;
 }
 
+.buttons {
+    margin-right: 10px;
+    color: white;
+}
+
+.buttons:hover {
+    color: white;
+}
+
 @media screen AND (max-width: 950px) {
     footer p, footer a, footer h2 {
         font-size: 10px;

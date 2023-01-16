@@ -8,8 +8,8 @@
 
     <h2 class="midTitle"> Vous voulez nous rejoindre ? </h2><br>
 
-    <p class="par"> C'est simple, soit vous pouvez vous inscrire dans l'onglet <em>Inscription</em>, soit vous pouvez nous rejoindre sur notre circuit situé à Saint-Gorgon. </p><br>
-    <p class="par"> Ici ce réunit chaque jour, plus de 20 pilotes de karting de tous niveaux. </p><br>
+    <p class="par"> C'est simple,vous pouvez vous inscrire dans l'onglet <em>Inscription</em>, ou vous pouvez nous rejoindre sur notre circuit situé à Saint-Gorgon. </p><br>
+    <p class="par"> Ici se réunissent chaque jour plus de 20 pilotes de karting de tous niveaux. </p><br>
 
     <h2 class="midTitle"> Vous pouvez aussi regarder quelques vidéos de notre club </h2><br>
     
