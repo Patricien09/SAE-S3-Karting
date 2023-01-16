@@ -1,5 +1,6 @@
 package javaPlanning;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javaPlanning.exceptions.TooManyParticipant;
@@ -110,16 +111,12 @@ public class Match {
     public boolean checkDateFormat(String date) {
         String[] checkDate = date.split("-");
 
-        if (checkDate.length != 3) {
+        try {
+            LocalDate.parse(date);
+        } catch (Exception e) {
             return false;
         }
-
-        int day = Integer.parseInt(checkDate[2]);
-        int month = Integer.parseInt(checkDate[1]);
         
-        if (day > 31 || day < 1 || month > 12 || month < 1) {
-            return false;
-        }
         return true;
     }
     

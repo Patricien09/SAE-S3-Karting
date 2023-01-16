@@ -5,13 +5,7 @@
         $title = $_POST['title'];
         $content = $_POST['content'];
         $date = date("Y-m-d H:i:s");
-        $sql = "INSERT INTO articles (title, content, date) VALUES ('$title', '$content', '$date')";
-        $result = mysqli_query($conn, $sql);
-        if ($result) {
-            echo "Votre message a bien été envoyé";
-        } else {
-            echo "Une erreur est survenue";
-        }
+        // TODO : Send email
     }
 ?>
 

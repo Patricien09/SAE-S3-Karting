@@ -337,7 +337,7 @@ public class Main implements ActionListener {
                     && !nbrPart.getText().equals("")) {
                 try {
                     // Creation du match pour verifier toutes les infos
-                    Match tmp = new Match(date.getText(), debut.getText(), fin.getText(),
+                    Match tmp = new Match(date.getText(), debut.getText() + ":00", fin.getText() + ":00",
                             ListCircuit.getCircuit(circuitComboBox.getSelectedItem().toString()),
                             Integer.parseInt(nbrPart.getText()));
                     // Ajout du match dans le planning
@@ -439,13 +439,12 @@ public class Main implements ActionListener {
                 // Demande confirmation
                 int dialogButton = JOptionPane.YES_NO_OPTION;
                 int dialogResult = JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment supprimer ce match ?", "Confirmation", dialogButton);
-                if (dialogResult == JOptionPane.NO_OPTION) {
+                if (dialogResult == JOptionPane.NO_OPTION || dialogResult == JOptionPane.CLOSED_OPTION) {
                     return;
                 }
 
                 Match m = planning.getMatchs().get(Integer.valueOf(selectedLine) - 1);
-                planning.supprimerMatch(m);
-
+                
                 try {
                     Statement stmt = con.createStatement();
 
@@ -454,13 +453,15 @@ public class Main implements ActionListener {
                     String query1 = "DELETE from `match_has_adherent` WHERE `Match_idMatch` = (SELECT `idMatch` FROM `match` WHERE `date` = '" + java.sql.Date.valueOf(m.getDate()) + "' AND `heureDebut` = '" + java.sql.Time.valueOf(m.getHeureDeb()) + "' AND `heureFin` = '" + java.sql.Time.valueOf(m.getHeureFin()) + "')";
                     String query2 = "DELETE from `match` WHERE `date` = '" + java.sql.Date.valueOf(m.getDate()) + "' AND `heureDebut` = '" + java.sql.Time.valueOf(m.getHeureDeb()) + "' AND `heureFin` = '" + java.sql.Time.valueOf(m.getHeureFin()) + "'";
 
+                    stmt.executeUpdate("SET FOREIGN_KEY_CHECKS = 0;");
                     stmt.executeUpdate(query1);
                     stmt.executeUpdate(query2);
+                    stmt.executeUpdate("SET FOREIGN_KEY_CHECKS = 1;");
                     stmt.close();
                 } catch (SQLException e1) {
                     System.err.println(e1.getMessage());
                 }
-
+                planning.supprimerMatch(m);
                 refreshList(m, "delete");
             } else {
                 JOptionPane.showMessageDialog(null, "Selectionnez une ligne", "ERREUR", JOptionPane.ERROR_MESSAGE);
@@ -481,7 +482,7 @@ public class Main implements ActionListener {
                     String oldDebut = tmp.getHeureDeb();
                     String oldFin = tmp.getHeureFin();
 
-                    LocalTime.parse(date);
+                    LocalDate.parse(date);
 
                     planning.deplacerMatch(tmp, date, debut, fin);
 
@@ -645,6 +646,12 @@ public class Main implements ActionListener {
                 JPListeEvents.remove(7 * (Integer.valueOf(selectedLine)) + 2);
                 JPListeEvents.remove(7 * (Integer.valueOf(selectedLine)) + 1);
                 JPListeEvents.remove(7 * (Integer.valueOf(selectedLine)));
+
+                // Met à jour les id des matchs
+                for (int i = Integer.valueOf(selectedLine); i <= planning.getMatchs().size(); i++) {
+                    JButton newId = (JButton) JPListeEvents.getComponent(7 * i);
+                    newId.setText(String.valueOf(i));
+                }
                 break;
 
             case "update":

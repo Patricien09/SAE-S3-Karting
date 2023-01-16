@@ -3,7 +3,10 @@
 ?>
 
 <div id="contenu">
-    Bienvenu dans notre A propos
+    
+    <!-- Page contenant les informations du club -->
+    
+
 </div>
 
 <?php 
