@@ -30,78 +30,87 @@ function infoUtilisateur()
             <body>
                 <div id="contenu">
                     <h1>Informations personnelles</h1>
-                    <p>Photo de profil :
-                        <?php
-                        // Vérifie si un dossier au nom de l'utilisateur existe, sinon le crée
-                        if (!file_exists("users/" . $_SESSION["username"])) {
-                            mkdir("users/" . $_SESSION["username"]);
-                        }
+                    <div id="profile">
+                        <p>Photo de profil :</p>
+                        <p>
+                            <?php
+                            // Vérifie si un dossier au nom de l'utilisateur existe, sinon le crée
+                            if (!file_exists("users/" . $_SESSION["username"])) {
+                                mkdir("users/" . $_SESSION["username"]);
+                            }
 
-                        // Vérifie qu'il existe une image dans ce dossier, sinon affiche une image par défaut
-                        if ($result = glob("users/" . $_SESSION["username"] . "/profil.*")) {
-                            // Ajoute le paramètre t=... pour éviter que le navigateur utilise une image en cache
-                            echo "<img src='" . $result[0] . "?t=" . time() . "' alt='Photo de profil' class='logo'>";
-                        } else {
-                            echo "<img src='logos/kart.jpg' alt='Photo de profil' width='200' height='200'>";
-                        }
+                            // Vérifie qu'il existe une image dans ce dossier, sinon affiche une image par défaut
+                            if ($result = glob("users/" . $_SESSION["username"] . "/profil.*")) {
+                                // Ajoute le paramètre t=... pour éviter que le navigateur utilise une image en cache
+                                echo "<img src='" . $result[0] . "?t=" . time() . "' alt='Photo de profil' class='logo'>";
+                            } else {
+                                echo "<img src='logos/kart.jpg' alt='Photo de profil' width='200' height='200'>";
+                            }
 
-                        // Ajoute un formulaire permettant de choisir une image et de l'envoyer au serveur
-                        ?>
-                        <form action="upload.php" method="post" enctype="multipart/form-data" id="pictureForm">
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <input type="file" name="file" id="file" accept="image/*">
+                            // Ajoute un formulaire permettant de choisir une image et de l'envoyer au serveur
+                            ?>
+                            <form action="upload.php" method="post" enctype="multipart/form-data" id="pictureForm">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <input type="file" name="file" id="file" accept="image/*">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="reset" name="reset" class="btn btn-secondary">
+                                        <input type="submit" name="submit" class="btn btn-primary">
+                                    </div>
+                                    <!-- Afficher les erreurs éventuelles -->
+                                    <div class="form-group">
+                                        <small id="upError" class="text-danger">
+                                            <?php
+                                            if (isset($_GET['error']) && $_GET['error'] == "fileSize") {
+                                                echo "Le fichier est trop volumineux";
+                                            }
+                                            ?>
+                                        </small>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <input type="reset" name="reset" class="btn btn-secondary">
-                                    <input type="submit" name="submit" class="btn btn-primary">
-                                </div>
-                                <!-- Afficher les erreurs éventuelles -->
-                                <div class="form-group">
-                                    <small id="upError" class="text-danger">
-                                        <?php
-                                        if (isset($_GET['error']) && $_GET['error'] == "fileSize") {
-                                            echo "Le fichier est trop volumineux";
-                                        }
-                                        ?>
-                                    </small>
-                                </div>
-                            </div>
-                        </form>
+                            </form>
+                        </p>
 
-                    </p>
-                    <p>Nom : <?php echo $row["nom"]; ?></p>
-                    <p>Prénom : <?php echo $row["prenom"]; ?></p>
-                    <p>Téléphone : <?php echo $row["telephone"]; ?></p>
-                    <p>Mail : <?php echo $row["mail"]; ?></p>
-                    <p>Document administratif : 
-                        <?php 
-                        // Vérifie que le fichier existe puis affiche un bouton pour le télécharger
-                        if (!file_exists("users/" . $_SESSION["username"] . "/doc_administratif.pdf")) {
-                            echo "Aucun document administratif";
-                        } else {
-                            echo "<a href='users/" . $_SESSION["username"] . "/doc_administratif.pdf'>Télécharger le document administratif</a>";
-                        }
-                        ?>
+                        <hr>
 
-                        <form action="upload.php" method="post" enctype="multipart/form-data" id="docForm">
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <input type="file" name="filePdf" id="filePdf" accept="application/pdf">
-                                </div>
-                                <div class="form-group">
-                                    <input type="reset" name="reset" class="btn btn-secondary">
-                                    <input type="submit" name="submitPdf" class="btn btn-primary">
-                                </div>
-                                <div class="form-group">
-                                    <!-- Texte qui servira à afficher les eventuelles erreurs -->
-                                    <small id="upErrorPdf" class="text-danger">
+                        <p>Nom : <?php echo $row["nom"]; ?></p>
+                        <p>Prénom : <?php echo $row["prenom"]; ?></p>
+                        <p>Téléphone : <?php echo $row["telephone"]; ?></p>
+                        <p>Mail : <?php echo $row["mail"]; ?></p>
 
-                                    </small>
+                        <hr>
+
+                        <p>Document administratif : </p>
+                        <p>
+                            <?php 
+                            // Vérifie que le fichier existe puis affiche un bouton pour le télécharger
+                            if (!file_exists("users/" . $_SESSION["username"] . "/doc_administratif.pdf")) {
+                                echo "Aucun document administratif";
+                            } else {
+                                echo "<a href='download.php?file=" . urlencode($_SESSION["username"]) . "'>Télécharger le document administratif</a>";
+                            }
+                            ?>
+
+                            <form action="upload.php" method="post" enctype="multipart/form-data" id="docForm">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <input type="file" name="filePdf" id="filePdf" accept="application/pdf">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="reset" name="reset" class="btn btn-secondary">
+                                        <input type="submit" name="submitPdf" class="btn btn-primary">
+                                    </div>
+                                    <div class="form-group">
+                                        <!-- Texte qui servira à afficher les eventuelles erreurs -->
+                                        <small id="upErrorPdf" class="text-danger">
+
+                                        </small>
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
-                    </p>
+                            </form>
+                        </p>
+                    </div>
                 </div>
             </body>
 <?php

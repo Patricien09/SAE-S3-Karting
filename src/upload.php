@@ -5,8 +5,8 @@ session_start();
 $target_dir = "users/" . $_SESSION["username"] . "/";
 $uploadOk = 1;
 
-// Si le formulaire pour la photo de profil a été envoyé
-if (isset($_FILES['file'])) {
+// Si le formulaire pour la photo de profil a été envoyé et que le fichier est bien présent
+if (isset($_FILES['file']) && $_FILES['file']['error'] == 0) {
     $target_file = $target_dir . "profil." . pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION);
     // Vérifie que l'image est bien une image
     if (isset($_POST['submit'])) {
@@ -42,7 +42,7 @@ if (isset($_FILES['file'])) {
             echo "Erreur lors de l'upload du fichier.";
         }
     }
-} elseif (isset($_FILES['filePdf'])) {
+} elseif (isset($_FILES['filePdf']) && $_FILES['filePdf']['error'] == 0) {
     $target_file = $target_dir . "doc_administratif.pdf";
     // Vérifie la taille du fichier
     if ($_FILES["filePdf"]["size"] > 1000000) {

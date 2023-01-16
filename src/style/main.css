@@ -40,8 +40,6 @@ body #contenu #blink{
     margin-bottom: 10px;
     font-size: 20px;
     text-align: center;
-    animation: blink 1s infinite;
-    transition: all ease;
 }
 
 /* Pour les évènements */
@@ -83,7 +81,7 @@ body #contenu #blink{
 }
 
 .event a {
-    color: white;
+    color: var(--yellowColor);
 }
 
 /* Bouton pour s'inscrire */
@@ -109,38 +107,24 @@ body #contenu #blink{
 	animation:Gradient 1s ease infinite;
 }
 
+.registerMatch:disabled {
+    background-color: var(--eventColor);
+    border: solid black 1px;
+    cursor: not-allowed;
+}
+
+.registerMatch:disabled:hover {
+    transform: scale(1);
+    border: solid black 1px;
+    box-shadow: none;
+    background: var(--eventColor) !important;
+}
+
 .unreg:hover {
     box-shadow:0 5px 8px rgba(247, 10, 22, 0.25);
 	background: rgb(255, 68, 68);
 	background:-webkit-linear-gradient(left,rgb(255, 68, 68) 0%,red 100%);
 	background:linear-gradient(to right,rgb(255, 68, 68) 0%,red 100%);
-}
-
-@keyframes blink {
-    0% {
-        color: rgb(255, 0, 0);
-        font-size: 22px;  
-    }
-    
-    25% {
-        color: rgb(132, 0, 255);
-        font-size: 24px;
-    }
-    
-    50% {
-        color: rgb(25, 0, 255);
-        font-size: 26px;
-    }
-    
-    75% {
-        color: blueviolet;
-        font-size: 24px;
-    }
-    
-    100% {
-        color: rgb(255, 0, 0);
-        font-size: 22px;
-    }
 }
 
 .container .row .col-md-6 {
@@ -342,7 +326,6 @@ body #contenu #blink{
 }
 
 /* Pour addArticle.php */
-
 .addArticleForm {
     display: flex;
     flex-direction: column;
@@ -372,6 +355,33 @@ body #contenu #blink{
     border-radius: 5px;
     background-color: var(--eventColor);
     border: 1px solid black;
+}
+
+/* Pour le profil des utilisateurs */
+#profile {
+    margin: auto;
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--eventColor);
+    max-width: 40%;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+#profile hr {
+    border: var(--yellowColor) 1px solid;
+    width: 100%;
+}
+
+#profile a {
+    color: var(--yellowColor);
+}
+
+#profile .modal-body div:nth-child(2) {
+    display: flex;
+    justify-content: space-around;
 }
 
 /* Responsive */

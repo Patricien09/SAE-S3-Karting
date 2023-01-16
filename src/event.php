@@ -79,9 +79,11 @@
                     echo "<p> Adresse : " . $rowCirc["adresse"] . "</p>";
                     echo "<p> Début : " . $row["heureDebut"] . "</p>";
                     echo "<p> Fin : " . $row["heureFin"] . "</p>";
-                    echo "<p> Nombre de participants nécessaires : " . $row["nbrPartNecessaire"] . "</p>";
+                    echo "<p> Nombre de places disponibles : " . ($row["nbrPartNecessaire"] - count($rowId)) . "</p>";
                     if (isset($_SESSION["connected"]) && $_SESSION["connected"]) {
-                        if ($isRegistered) {
+                        if ($row["nbrPartNecessaire"] - count($rowId) <= 0) {
+                            echo "<button id='" . $row["idMatch"] . "' class='registerMatch' disabled> Complet </button>";
+                        } else if ($isRegistered) {
                             echo "<button id='" . $row["idMatch"] . "' class='registerMatch unreg' onclick='registerMatch(" . $row["idMatch"] . "," . $_SESSION["id"] . ",true)'> Se désinscrire </button>";
                         } else {
                             echo "<button id='" . $row["idMatch"] . "' class='registerMatch' onclick='registerMatch(" . $row["idMatch"] . "," . $_SESSION["id"] . ",false)'> S'inscrire </button>";
