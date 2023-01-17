@@ -19,6 +19,11 @@
                 <li class="event">
                     Site :<br>
                     <a href="">Fournisseur de karting</a>
+                    <div>
+                        <a href="https://fr-fr.facebook.com/kartingdes24Heures/"><img src="logos/Facebook.png" alt="facebook" width="50" height="50"></a>
+                        <a href="https://www.instagram.com/karting_des_24heures/?hl=fr"><img src="logos/Instagram.png" alt="instagram" width="50" height="50"></a>
+                        <a href="https://youtu.be/f_WuRfuMXQw"><img src="logos/Youtube.png" alt="youtube" width="50" height="50"></a>
+                    </div>
                 </li>
                 <li class="event">
                     Descritpion :<br>
@@ -38,6 +43,11 @@
                 <li class="event">
                     Site :<br>
                     <a href="">Fournisseur de casques de protection</a>
+                    <div>
+                        <a href="https://fr-fr.facebook.com/kartingdes24Heures/"><img src="logos/Facebook.png" alt="facebook" width="50" height="50"></a>
+                        <a href="https://www.instagram.com/karting_des_24heures/?hl=fr"><img src="logos/Instagram.png" alt="instagram" width="50" height="50"></a>
+                        <a href="https://youtu.be/f_WuRfuMXQw"><img src="logos/Youtube.png" alt="youtube" width="50" height="50"></a>
+                    </div>
                 </li>
                 <li class="event">
                     Descritpion :<br>
@@ -57,6 +67,11 @@
                 <li class="event">
                     Site :<br>
                     <a href="">Fournisseur de gants de protection</a>
+                    <div>
+                        <a href="https://fr-fr.facebook.com/kartingdes24Heures/"><img src="logos/Facebook.png" alt="facebook" width="50" height="50"></a>
+                        <a href="https://www.instagram.com/karting_des_24heures/?hl=fr"><img src="logos/Instagram.png" alt="instagram" width="50" height="50"></a>
+                        <a href="https://youtu.be/f_WuRfuMXQw"><img src="logos/Youtube.png" alt="youtube" width="50" height="50"></a>
+                    </div>
                 </li>
                 <li class="event">
                     Descritpion :<br>
@@ -76,6 +91,11 @@
                 <li class="event">
                     Site :<br>
                     <a href="">Fournisseur de combinaisons de pilote</a>
+                    <div>
+                        <a href="https://fr-fr.facebook.com/kartingdes24Heures/"><img src="logos/Facebook.png" alt="facebook" width="50" height="50"></a>
+                        <a href="https://www.instagram.com/karting_des_24heures/?hl=fr"><img src="logos/Instagram.png" alt="instagram" width="50" height="50"></a>
+                        <a href="https://youtu.be/f_WuRfuMXQw"><img src="logos/Youtube.png" alt="youtube" width="50" height="50"></a>
+                    </div>
                 </li>
                 <li class="event">
                     Descritpion :<br>

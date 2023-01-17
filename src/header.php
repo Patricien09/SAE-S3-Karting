@@ -49,12 +49,12 @@ require_once("login.php");
                     <li><a href="event.php"><b>Évènements</b></a></li>
 
                     <li><a href="partenaire.php"><b>Partenaires</b></a></li>
-                    <li><a href="reservation.php"><b>Réservation</b></a></li>
-
+                    
                     
                     <?php
                     //si l'utilisateur est connecté, on affiche le bouton du profil et de déconnexion
                     if (isset($_SESSION["connected"]) && $_SESSION["connected"] == true) {
+                        echo "<li><a href='reservation.php'><b>Réservation</b></a></li>";
                         echo "<li><a class='button1' href='profil.php'><b>Profil</b></a></li>";
                         echo "<li><a class='button1' href='logout.php'><b>Déconnexion</b></a></li>";
                     } else {

@@ -384,6 +384,22 @@ body #contenu #blink{
     justify-content: space-around;
 }
 
+.sectionAP {
+    display: flex;
+    font-size: 20px;
+    justify-content: space-evenly;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.sectionAP:nth-child(odd) img {
+    margin-left: 30px;
+}
+
+.sectionAP:nth-child(even) img {
+    margin-right: 30px;
+}
+
 /* Responsive */
 @media screen AND (max-width: 950px) {
     .videos, .images {
