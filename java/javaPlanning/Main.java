@@ -450,8 +450,8 @@ public class Main implements ActionListener {
 
                     // Supprime d'abord les lignes dans la table match_has_adherent ou le match est present
                     // Puis supprime la ligne dans la table match
-                    String query1 = "DELETE from `match_has_adherent` WHERE `Match_idMatch` = (SELECT `idMatch` FROM `match` WHERE `date` = '" + java.sql.Date.valueOf(m.getDate()) + "' AND `heureDebut` = '" + java.sql.Time.valueOf(m.getHeureDeb()) + "' AND `heureFin` = '" + java.sql.Time.valueOf(m.getHeureFin()) + "')";
-                    String query2 = "DELETE from `match` WHERE `date` = '" + java.sql.Date.valueOf(m.getDate()) + "' AND `heureDebut` = '" + java.sql.Time.valueOf(m.getHeureDeb()) + "' AND `heureFin` = '" + java.sql.Time.valueOf(m.getHeureFin()) + "'";
+                    String query1 = "DELETE from `match_has_adherent` WHERE `Match_idMatch` = (SELECT `idMatch` FROM `match` WHERE `date` = '" + java.sql.Date.valueOf(m.getDate()) + "' AND `heureDebut` = '" + java.sql.Time.valueOf(m.getHeureDeb()) + "' AND `heureFin` = '" + java.sql.Time.valueOf(m.getHeureFin()) + "' AND Circuit_idCircuit IN (SELECT `idCircuit` FROM `circuit` WHERE `nom` = '" + m.getCircuit().getName() + "'))";
+                    String query2 = "DELETE from `match` WHERE `date` = '" + java.sql.Date.valueOf(m.getDate()) + "' AND `heureDebut` = '" + java.sql.Time.valueOf(m.getHeureDeb()) + "' AND `heureFin` = '" + java.sql.Time.valueOf(m.getHeureFin()) + "' AND Circuit_idCircuit IN (SELECT `idCircuit` FROM `circuit` WHERE `nom` = '" + m.getCircuit().getName() + "')";
 
                     stmt.executeUpdate("SET FOREIGN_KEY_CHECKS = 0;");
                     stmt.executeUpdate(query1);

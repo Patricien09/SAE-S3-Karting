@@ -103,3 +103,29 @@ function setWinner(idMatch) {
         });
     }
 }
+
+function cancelRes(idRes) {
+    if (confirm("Voulez-vous vraiment annuler cette réservation ?")) {
+        $.ajax({
+            url: "cancelRes.php",
+            dataType: "html",
+            type: "POST",
+            data: {
+                idRes: idRes
+            },
+            success: function(data) {
+                if (data == "Réussie")
+                    $("#resError" + idRes).html("Annulation réussie");
+                else if (data == "Erreur")
+                    $("#resError" + idRes).html("Erreur");
+                // Reload the page
+                setTimeout(function() {
+                    location.reload();
+                }, 1000);
+            },
+            error: function(data) {
+                alert("Dommage");
+            }
+        });
+    }
+}

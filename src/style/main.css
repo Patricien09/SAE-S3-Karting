@@ -34,12 +34,12 @@ body #contenu h1{
     text-align: center;
 }
 
-
 body #contenu #blink{
-    margin-top: 280px;
+    margin-top: 60px;
     margin-bottom: 10px;
     font-size: 20px;
     text-align: center;
+    color: rgb(246, 75, 75);
 }
 
 /* Pour les évènements */

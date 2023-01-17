@@ -109,8 +109,6 @@ public class Match {
      * @return true si le format est bon, false sinon
      */
     public boolean checkDateFormat(String date) {
-        String[] checkDate = date.split("-");
-
         try {
             LocalDate.parse(date);
         } catch (Exception e) {
