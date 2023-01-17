@@ -340,6 +340,12 @@ public class Main implements ActionListener {
                     Match tmp = new Match(date.getText(), debut.getText() + ":00", fin.getText() + ":00",
                             ListCircuit.getCircuit(circuitComboBox.getSelectedItem().toString()),
                             Integer.parseInt(nbrPart.getText()));
+
+                    if (!checkReserv(tmp)) {
+                        // Message d'erreur
+                        confirmation.setText("Il y a déjà une réservation pour ce match");
+                        return;
+                    }
                     // Ajout du match dans le planning
                     planning.ajouterMatch(tmp);
                     // Message de confirmation
@@ -760,6 +766,54 @@ public class Main implements ActionListener {
             // Gestion des erreurs
             System.out.println("SQLException: " + ex.getMessage());
         }
+    }
+
+    /**
+     * Pour chaque reservation, on verifie qu'aucune ne chevauche pas le match
+     * @param m
+     * @return
+     */
+    public boolean checkReserv(Match m) {
+        try {
+            con = DriverManager.getConnection(url, "root", "");
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM reservation");
+
+            planning.ajouterMatch(m);
+
+            while (rs.next()) {
+                // On ne garde que les reservations dont autorisation est différent de 2
+                if (rs.getInt("autorisation") == 2) {
+                    continue;
+                }
+
+                String date = rs.getString("date");
+                String debut = rs.getString("heureDebut");
+                String fin = rs.getString("heureFin");
+                String circuit = rs.getString("Circuit_idCircuit");
+
+                // Recupere le nom du circuit
+                Statement stmt2 = con.createStatement();
+                ResultSet rs2 = stmt2.executeQuery("SELECT * FROM circuit WHERE idCircuit = " + circuit);
+                rs2.next();
+                String circuitName = rs2.getString("nom");
+
+                // On verifie que la reservation ne chevauche pas le match
+                if (!planning.verifierDispo(new Match(date, debut, fin, ListCircuit.getCircuit(circuitName), 0))) {
+                    planning.supprimerMatch(m);
+                    return false;
+                }
+            }
+        } catch (SQLException ex) {
+            // Gestion des erreurs
+            System.out.println("SQLException: " + ex.getMessage());
+        } catch (WrongTimeException e) {
+            System.out.println("Erreur : " + e.getMessage());
+        } catch (CircuitExistException e2) {
+            System.out.println("Erreur : " + e2.getMessage());
+        }
+        planning.supprimerMatch(m);
+        return true;
     }
 
     public static void main(String[] args) throws SQLException {

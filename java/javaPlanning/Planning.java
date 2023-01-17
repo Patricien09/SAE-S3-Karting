@@ -1,5 +1,6 @@
 package javaPlanning;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -43,8 +44,10 @@ public class Planning {
      * @param heureFin   la nouvelle heure de fin du match
      */
     public void deplacerMatch(Match match, String date, String heureDebut, String heureFin) throws WrongTimeException {
-        // Recopie le match dans une variable tampon, et garde l'index du match dans la liste
-        Match tmp = new Match(match.getDate(), match.getHeureDeb(), match.getHeureFin(), match.getCircuit(), match.getNbJoueursMax());
+        // Recopie le match dans une variable tampon, et garde l'index du match dans la
+        // liste
+        Match tmp = new Match(match.getDate(), match.getHeureDeb(), match.getHeureFin(), match.getCircuit(),
+                match.getNbJoueursMax());
         int index = matchs.indexOf(match);
         supprimerMatch(match);
         if (verifierDispo(new Match(date, heureDebut, heureFin, match.getCircuit(), match.getNbJoueursMax()))) {
@@ -85,23 +88,24 @@ public class Planning {
                 continue;
             }
 
+            LocalTime timeDeb = LocalTime.of(Integer.parseInt(checkHourDeb[0]), Integer.parseInt(checkHourDeb[1]));
+            LocalTime timeFin = LocalTime.of(Integer.parseInt(checkHourFin[0]), Integer.parseInt(checkHourFin[1]));
+
+            LocalTime timeDeb2 = LocalTime.of(Integer.parseInt(checkHourDeb2[0]), Integer.parseInt(checkHourDeb2[1]));
+            LocalTime timeFin2 = LocalTime.of(Integer.parseInt(checkHourFin2[0]), Integer.parseInt(checkHourFin2[1]));
+
             // Verifie si l'heure de debut du match est comprise entre l'heure de debut et
             // de fin d'un autre match
             // Verifie aussi que l'heure de fin du match est comprise entre l'heure de debut
             // et de fin d'un autre match
             // Verifie aussi les minutes, renvoie false si c'est le cas
-            if ((Integer.parseInt(checkHourDeb[0]) > Integer.parseInt(checkHourDeb2[0])
-                    && Integer.parseInt(checkHourDeb[0]) < Integer.parseInt(checkHourFin2[0]))
-                    || (Integer.parseInt(checkHourDeb[0]) == Integer.parseInt(checkHourDeb2[0])
-                            && Integer.parseInt(checkHourDeb[1]) >= Integer.parseInt(checkHourDeb2[1]))
-                    || (Integer.parseInt(checkHourDeb[0]) == Integer.parseInt(checkHourFin2[0])
-                            && Integer.parseInt(checkHourDeb[1]) <= Integer.parseInt(checkHourFin2[1]))
-                    || (Integer.parseInt(checkHourFin[0]) > Integer.parseInt(checkHourDeb2[0])
-                            && Integer.parseInt(checkHourFin[0]) < Integer.parseInt(checkHourFin2[0]))
-                    || (Integer.parseInt(checkHourFin[0]) == Integer.parseInt(checkHourDeb2[0])
-                            && Integer.parseInt(checkHourFin[1]) >= Integer.parseInt(checkHourDeb2[1]))
-                    || (Integer.parseInt(checkHourFin[0]) == Integer.parseInt(checkHourFin2[0])
-                            && Integer.parseInt(checkHourFin[1]) <= Integer.parseInt(checkHourFin2[1]))) {
+            if ((timeDeb.isAfter(timeDeb2) && timeDeb.isBefore(timeFin2))
+                    || (timeFin.isAfter(timeDeb2) && timeFin.isBefore(timeFin2))
+                    || (timeDeb.equals(timeDeb2) && timeFin.equals(timeFin2))
+                    || (timeDeb.equals(timeDeb2) && timeFin.isBefore(timeFin2))
+                    || (timeDeb.isAfter(timeDeb2) && timeFin.equals(timeFin2))
+                    || (timeDeb.isBefore(timeDeb2) && timeFin.isAfter(timeFin2))
+                    || (timeDeb.equals(timeDeb2) && timeFin.isAfter(timeFin2))) {
                 return false;
             }
         }
@@ -120,10 +124,11 @@ public class Planning {
 
     /**
      * Affiche le planning, avec chaque match sur une ligne
-     * Un match est affiche selon le format : date/heureDebut-heureFin/nombreNecessaire/Circuit
+     * Un match est affiche selon le format :
+     * date/heureDebut-heureFin/nombreNecessaire/Circuit
      */
     public void afficherPlanning() {
-        //sortPlanning();
+        // sortPlanning();
         for (Match m : matchs) {
             System.out.println(m);
         }
