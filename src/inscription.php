@@ -48,24 +48,24 @@ if (isset($_POST["name"]) && isset($_POST["forename"]) && isset($_POST["adresse"
         ":password" => $hash,
     ];
 
-    $stmt = $connexion->prepare($sql);
-    $res = $stmt->execute($values);
+    $stmt2 = $connexion->prepare($sql);
+    $res = $stmt2->execute($values);
 
     if (!$res) {
         exit("Problème d'accès à la bdd");
     } else {
-        exit("Inscription réussie");
-        $sql = htmlspecialchars("INSERT INTO `adherent` (`derniereVisite`, `derniereInscription`, `niveauPratique`, `photo`, `Personne_idPersonne`) VALUES (NULL, NULL, NULL, NULL, :id)");
+        $sql = htmlspecialchars("INSERT INTO `adherent` (`derniereVisite`, `niveauPratique`, `photo`, `Personne_idPersonne`) VALUES (NULL, NULL, NULL, :id)");
         
         $values = [
             ":id" => $connexion->lastInsertId()
         ];
         
-        $stmt = $connexion->prepare($sql);
-        $res = $stmt->execute($values);
+        $stmt3 = $connexion->prepare($sql);
+        $res2 = $stmt3->execute($values);
         
-        if (!$res) {
+        if (!$res2) {
             exit("Problème d'accès à la bdd");
         }
+        exit("Inscription réussie");
     }
 }

@@ -1,5 +1,14 @@
 <?php
 require_once("login.php");
+
+// On regarde si le temps de la session est dépassé
+$now = time();
+if (isset($_SESSION['connected']) && $_SESSION['connected']) {
+    if ($now > $_SESSION['expire']) {
+        session_destroy();
+        header("Location: accueil.php");
+    }
+}
 ?>
 
 <!doctype html>

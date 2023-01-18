@@ -31,7 +31,8 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
 ?>
 
             <script>
-                alert("Erreur de connexion");
+                alert("Mauvais mot de passe ou nom d'utilisateur");
+                window.location.replace("accueil.php");
             </script>
 
         <?php
@@ -42,6 +43,11 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
                 $_SESSION["connected"] = true;
                 $_SESSION["username"] = $username;
                 $_SESSION["id"] = $row["idPersonne"];
+
+                // Définit le temps de la session
+                $_SESSION["start"] = time();
+                $_SESSION["expire"] = $_SESSION["start"] + (5 * 60 * 60);
+
                 //Recupere l'id de l'admin dans la table admin
                 $sql = "SELECT `Personne_idPersonne` FROM `admin` WHERE `Personne_idPersonne` = :id";
                 $stmt2 = $connexion->prepare($sql);

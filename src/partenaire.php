@@ -26,7 +26,7 @@
                     </div>
                 </li>
                 <li class="event">
-                    Descritpion :<br>
+                    Description :<br>
                     Je suis un fournisseur de karting qui font vroum vroum
                 </li>
             </ul>
@@ -50,7 +50,7 @@
                     </div>
                 </li>
                 <li class="event">
-                    Descritpion :<br>
+                    Description :<br>
                     Je suis un fournisseur de casques de protection qui protègent
                 </li>
             </ul>
@@ -74,7 +74,7 @@
                     </div>
                 </li>
                 <li class="event">
-                    Descritpion :<br>
+                    Description :<br>
                     Je suis un fournisseur de gants de protection qui évitent de transformer ses mains en passoire
                 </li>
             </ul>
@@ -98,7 +98,7 @@
                     </div>
                 </li>
                 <li class="event">
-                    Descritpion :<br>
+                    Description :<br>
                     Je suis un fournisseur de combinaisons de pilote qui ont du swag
                 </li>
             </ul>
