@@ -28,7 +28,7 @@
     $stmt2 = $con->prepare($sql);
 
     // On récupère l'id du match pour avoir tous les participants de ce match
-    $sql = "SELECT * FROM `match_has_adherent` WHERE `Match_idMatch` = :idMatch";
+    $sql = "SELECT * FROM `match_has_adherent` JOIN `personne` ON `Adherent_Personne_idPersonne` = idPersonne WHERE `Match_idMatch` = :idMatch";
     $stmt3 = $con->prepare($sql);
 ?>
 
@@ -89,7 +89,7 @@
                             echo "<button id='" . $row["idMatch"] . "' class='registerMatch' onclick='registerMatch(" . $row["idMatch"] . "," . $_SESSION["id"] . ",false)'> S'inscrire </button>";
                         }
                     }
-                    echo "<small id='matchError" . $row["idMatch"] . "' style='color: red; '> </small>";
+                    echo "<small id='matchError" . $row["idMatch"] . "' style='color: white; '> </small>";
                     echo "</li>";
                 }
             ?>
@@ -111,15 +111,31 @@
                     }
 
                     $rowCirc = $stmt2->fetch();
-
+                    
+                    
                     echo "<li class='event'>";
                     echo "<h2 style=\" color: var(--yellowColor);\">" . $row["date"] . "</h2>";
                     echo "<p> Circuit : " . $rowCirc["nom"] . "</p>";
                     echo "<p> Adresse : " . $rowCirc["adresse"] . "</p>";
                     echo "<p> Début : " . $row["heureDebut"] . "</p>";
                     echo "<p> Fin : " . $row["heureFin"] . "</p>";
+                    
                     if ($row["Gagnant"] != null) {
-                        echo "<p> Gagnant : " . $row["Gagnant"] . "</p>";
+                        $stmt4 = $con->prepare("SELECT * FROM `personne` WHERE `idPersonne` = :idPersonne");
+    
+                        $values = [
+                            "idPersonne" => $row["Gagnant"]
+                        ];
+
+                        $res = $stmt4->execute($values);
+
+                        if (!$res) {
+                            echo "Erreur lors de la récupération des matchs";
+                        }
+
+                        $rowWin = $stmt4->fetch();
+
+                        echo "<p> Gagnant : " . $rowWin["nom"] . " " . $rowWin["prenom"] . "</p>";
                     }
                     if (isset($_SESSION["admin"]) && $_SESSION["admin"]) {
                         $values = [
@@ -131,14 +147,15 @@
                             echo "Erreur lors de la récupération des matchs";
                         }
                         
-                        $rowId = $stmt3->fetchAll();
-                        echo "<select id=\"list" . $row["idMatch"] . "\" class=\"registerMatch\" onchange=\"setWinner(" . $row["idMatch"] . ")\"> Définir le gagnant";
-                        echo "<option value=\"0\"> Définir le gagnant </option>";
-
-                        foreach($rowId as $id) {
-                            echo "<option value=\"" . $id["Adherent_Personne_idPersonne"] . "\">" . $id["Adherent_Personne_idPersonne"] . "</option>";
+                        if ($row["Gagnant"] == null) {
+                            echo "<select id=\"list" . $row["idMatch"] . "\" class=\"registerMatch\" onchange=\"setWinner(" . $row["idMatch"] . ")\"> Définir le gagnant";
+                            echo "<option value=\"0\"> Définir le gagnant </option>";
+                            $rowId = $stmt3->fetchAll();
+                            foreach($rowId as $id) {
+                                echo "<option value=\"" . $id["Adherent_Personne_idPersonne"] . "\">" . $id["nom"] . " " . $id["prenom"] . "</option>";
+                            }
+                            echo "</select>";
                         }
-                        echo "</select>";
                     }
                     echo "<small id=\"winError" . $row["idMatch"] . "\"> </small>";
                     echo "</li>";

@@ -366,6 +366,7 @@ body #contenu #blink{
     align-items: center;
     background-color: var(--eventColor);
     max-width: 40%;
+    min-width: 300px;
     padding: 20px;
     border-radius: 20px;
 }
@@ -382,6 +383,10 @@ body #contenu #blink{
 #profile .modal-body div:nth-child(2) {
     display: flex;
     justify-content: space-around;
+}
+
+#profile .modal-body .form-group:nth-child(1) {
+    text-align: center;
 }
 
 .sectionAP {

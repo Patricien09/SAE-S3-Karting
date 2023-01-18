@@ -7,7 +7,7 @@ function infoUtilisateur()
     //Afficher les infos de l'utilisateur connecté avec une requete sql et en utilisant PDO et en l'affichant en HTML
 
     $connexion = connect_bd();
-    $sql = "SELECT * FROM `personne` WHERE `mail` = :mail";
+    $sql = "SELECT * FROM `personne` JOIN adherent ON personne.idPersonne = adherent.Personne_idPersonne WHERE `mail` = :mail";
     $stmt = $connexion->prepare($sql);
     $values = [
         ":mail" => $_SESSION["username"]
@@ -78,6 +78,32 @@ function infoUtilisateur()
                         <p>Prénom : <?php echo $row["prenom"]; ?></p>
                         <p>Téléphone : <?php echo $row["telephone"]; ?></p>
                         <p>Mail : <?php echo $row["mail"]; ?></p>
+                        <p>Niveau de pratique : <?php
+                        if ($row["niveauPratique"] == null) {
+                            // Si le niveau de pratique n'est pas rensegigné, affiche "Non renseigné"
+                            // Permet de le renseigner avec un formulaire
+                            ?>
+                            <p>Non renseigné</p>
+                            <form action="updateNiveau.php" method="post" id="niveauForm">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <select name="niveau" id="niveau">
+                                            <option value="Débutant">Débutant</option>
+                                            <option value="Intermédiaire">Intermédiaire</option>
+                                            <option value="Confirmé">Confirmé</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="reset" name="reset" class="btn btn-secondary">
+                                        <input type="submit" name="submit" class="btn btn-primary">
+                                    </div>
+                                </div>
+                            </form>
+                            <?php
+                        } else {
+                            echo $row["niveauPratique"]; 
+                        }
+                        ?></p>
 
                         <hr>
 

@@ -45,6 +45,7 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
                 //Recupere l'id de l'admin dans la table admin
                 $sql = "SELECT `Personne_idPersonne` FROM `admin` WHERE `Personne_idPersonne` = :id";
                 $stmt2 = $connexion->prepare($sql);
+
                 $values2 = [
                     ":id" => $row["idPersonne"]
                 ];
@@ -52,6 +53,19 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
                 $res = $stmt2->execute($values2);
                 //Declare une variable de session admin qui est true si l'utilisateur est admin
                 $_SESSION["admin"] = $stmt2->rowCount() == 0 ? false : true;
+
+                // Update la date de derniere visite
+                $sql = "UPDATE `adherent` SET `derniereVisite` = :date WHERE `Personne_idPersonne` = :id";
+
+                $stmt = $connexion->prepare($sql);
+
+                $values2 = [
+                    ":date" => date("Y-m-d"),
+                    ":id" => $row["idPersonne"]
+                ];
+
+                $res = $stmt->execute($values2);
+
                 $_POST = array();
             }
         ?>

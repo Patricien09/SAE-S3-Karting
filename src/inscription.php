@@ -54,16 +54,16 @@ if (isset($_POST["name"]) && isset($_POST["forename"]) && isset($_POST["adresse"
     if (!$res) {
         exit("Problème d'accès à la bdd");
     } else {
-        echo "Inscription réussie";
+        exit("Inscription réussie");
         $sql = htmlspecialchars("INSERT INTO `adherent` (`derniereVisite`, `derniereInscription`, `niveauPratique`, `photo`, `Personne_idPersonne`) VALUES (NULL, NULL, NULL, NULL, :id)");
-
+        
         $values = [
             ":id" => $connexion->lastInsertId()
         ];
-
+        
         $stmt = $connexion->prepare($sql);
         $res = $stmt->execute($values);
-
+        
         if (!$res) {
             exit("Problème d'accès à la bdd");
         }
