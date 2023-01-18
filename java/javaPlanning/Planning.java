@@ -159,5 +159,4 @@ public class Planning {
     public ArrayList<Match> getMatchs() {
         return matchs;
     }
-
 }
