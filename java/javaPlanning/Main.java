@@ -307,7 +307,7 @@ public class Main implements ActionListener {
 
                     Statement stmt = con.createStatement();
 
-                    String query = "INSERT INTO `match` (`idMatch`, `date`, `heureDebut`, `heureFin`, `nbrPartNecessaire`, `Gagnant`, `resultatFinal`, `Circuit_idCircuit`, `Admin_Personne_idPersonne`) VALUES (NULL, '" + java.sql.Date.valueOf(date.getText()) + "', '" + java.sql.Time.valueOf(debut.getText() + ":00") + "', '" + java.sql.Time.valueOf(fin.getText() + ":00") + "', '" + Integer.parseInt(nbrPart.getText()) + "', NULL, NULL, (SELECT `idCircuit` from `circuit` WHERE `adresse` = '" + ListCircuit.getCircuit(circuitComboBox.getSelectedItem().toString()).getAdresse() + "'), '36')";
+                    String query = "INSERT INTO `match` (`idMatch`, `date`, `heureDebut`, `heureFin`, `nbrPartNecessaire`, `Gagnant`, `resultatFinal`, `Circuit_idCircuit`) VALUES (NULL, '" + java.sql.Date.valueOf(date.getText()) + "', '" + java.sql.Time.valueOf(debut.getText() + ":00") + "', '" + java.sql.Time.valueOf(fin.getText() + ":00") + "', '" + Integer.parseInt(nbrPart.getText()) + "', NULL, NULL, (SELECT `idCircuit` from `circuit` WHERE `adresse` = '" + ListCircuit.getCircuit(circuitComboBox.getSelectedItem().toString()).getAdresse() + "'))";
 
                     // Ajoute la ligne dans la bdd apres les verifications
                     stmt.executeUpdate(query);

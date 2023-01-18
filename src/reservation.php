@@ -68,9 +68,11 @@
                                     break;
                                 case 1:
                                     echo "<p>Autorisée</p>";
-                                    // Ajoute un bouton pour se désinscrire
-                                    echo "<button class='registerMatch unreg' onclick='cancelRes(" . $res["idReservation"] . ")'> Annuler </button>" ;
-                                    echo "<small id='resError" . $res["idReservation"] . "'></small>";
+                                    if ($res["date"] > date("Y-m-d")) {
+                                        // Ajoute un bouton pour se désinscrire
+                                        echo "<button class='registerMatch unreg' onclick='cancelRes(" . $res["idReservation"] . ")'> Annuler </button>" ;
+                                        echo "<small id='resError" . $res["idReservation"] . "'></small>";
+                                    }
                                     break;
                                 default:
                                     echo "<p>Refusée</p>";
