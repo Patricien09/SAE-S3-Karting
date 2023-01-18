@@ -288,8 +288,24 @@ public class Main implements ActionListener {
             if (!date.getText().equals("") && !debut.getText().equals("") && !fin.getText().equals("")
                     && !nbrPart.getText().equals("")) {
                 try {
+                    String debutS =  debut.getText();
+                    String finS = fin.getText();
+
+                    if (debutS.split(":").length == 2) {
+                        debutS += ":00";
+                    }
+
+                    if (finS.split(":").length == 2) {
+                        finS += ":00";
+                    }
+
+                    if (debutS.split(":").length != 3 || finS.split(":").length != 3) {
+                        confirmation.setText("L'heure doit être au format hh:mm:ss");
+                        return;
+                    }
+
                     // Creation du match pour verifier toutes les infos
-                    Match tmp = new Match(date.getText(), debut.getText() + ":00", fin.getText() + ":00",
+                    Match tmp = new Match(date.getText(), debutS, finS,
                             ListCircuit.getCircuit(circuitComboBox.getSelectedItem().toString()),
                             Integer.parseInt(nbrPart.getText()));
 
@@ -307,7 +323,7 @@ public class Main implements ActionListener {
 
                     Statement stmt = con.createStatement();
 
-                    String query = "INSERT INTO `match` (`idMatch`, `date`, `heureDebut`, `heureFin`, `nbrPartNecessaire`, `Gagnant`, `resultatFinal`, `Circuit_idCircuit`) VALUES (NULL, '" + java.sql.Date.valueOf(date.getText()) + "', '" + java.sql.Time.valueOf(debut.getText() + ":00") + "', '" + java.sql.Time.valueOf(fin.getText() + ":00") + "', '" + Integer.parseInt(nbrPart.getText()) + "', NULL, NULL, (SELECT `idCircuit` from `circuit` WHERE `adresse` = '" + ListCircuit.getCircuit(circuitComboBox.getSelectedItem().toString()).getAdresse() + "'))";
+                    String query = "INSERT INTO `match` (`idMatch`, `date`, `heureDebut`, `heureFin`, `nbrPartNecessaire`, `Gagnant`, `resultatFinal`, `Circuit_idCircuit`) VALUES (NULL, '" + java.sql.Date.valueOf(date.getText()) + "', '" + java.sql.Time.valueOf(debutS) + "', '" + java.sql.Time.valueOf(finS) + "', '" + Integer.parseInt(nbrPart.getText()) + "', NULL, NULL, (SELECT `idCircuit` from `circuit` WHERE `adresse` = '" + ListCircuit.getCircuit(circuitComboBox.getSelectedItem().toString()).getAdresse() + "'))";
 
                     // Ajoute la ligne dans la bdd apres les verifications
                     stmt.executeUpdate(query);
@@ -444,6 +460,18 @@ public class Main implements ActionListener {
 
                     LocalDate.parse(date);
 
+                    if (debut.split(":").length == 2) {
+                        debut += ":00";
+                    }
+                    if (fin.split(":").length == 2) {
+                        fin += ":00";
+                    }
+
+                    if (debut.split(":").length != 3 || fin.split(":").length != 3) {
+                        affichageResultat.setText("L'heure doit être au format hh:mm:ss");
+                        return;
+                    }
+
                     planning.deplacerMatch(tmp, date, debut, fin);
 
                     tmp.setGagnant(gagnant);
@@ -452,7 +480,7 @@ public class Main implements ActionListener {
 
                     // Desactive la verification des clefs etrangeres
                     stmt.executeUpdate("SET FOREIGN_KEY_CHECKS=0");
-                    
+
                     // Modifie la ligne dans la bdd
                     String query = "UPDATE `match` SET `date` = '" + java.sql.Date.valueOf(date) + "', `heureDebut` = '" + java.sql.Time.valueOf(debut) + "', `heureFin` = '" + java.sql.Time.valueOf(fin) + "', `Gagnant` = " + idGagnant + " WHERE `date` = '" + java.sql.Date.valueOf(oldDate) + "' AND `heureDebut` = '" + java.sql.Time.valueOf(oldDebut) + "' AND `heureFin` = '" + java.sql.Time.valueOf(oldFin) + "'";
                     
@@ -461,12 +489,14 @@ public class Main implements ActionListener {
                     stmt.executeUpdate("SET FOREIGN_KEY_CHECKS=1");
                     stmt.close();
 
+                    affichageResultat.setText("");
+
                     refreshList(tmp, "update");
                     updateJFrame.setVisible(false);
                 } catch (WrongTimeException e1) {
                     JOptionPane.showMessageDialog(null, e1.getMessage(), "ERREUR", JOptionPane.ERROR_MESSAGE);
                 } catch (IllegalArgumentException e3) {
-                    JOptionPane.showMessageDialog(null, e3.getMessage(), "ERREUR", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, e3.getMessage().toString(), "ERREUR", JOptionPane.ERROR_MESSAGE);
                 } catch (SQLException e4) {
                     JOptionPane.showMessageDialog(null, e4.getMessage(), "ERREUR", JOptionPane.ERROR_MESSAGE);
                 } catch (DateTimeParseException e5) {
