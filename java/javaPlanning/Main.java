@@ -27,8 +27,8 @@ public class Main implements ActionListener {
     String url = "jdbc:mysql://localhost:3306/bdsae";
     Connection con;
 
-    // Objets pour le planning
-    Planning planning = new Planning();
+    // Objets pour le planning, récupère en même temps les matchs de la bdd
+    Planning planning;
     JComboBox circuitComboBox;
 
     // Objets du JFrame InsertionJFrame
@@ -55,52 +55,12 @@ public class Main implements ActionListener {
     JPanel RButtons, RLists;
 
     Main() {
-        // Connexion a la bdd pour recuperer les circuits et les placer dans ListCircuit
-        // On remplit aussi le planning avec les matchs de la bdd, ainsi que les adhérents
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection(url, "root", "");
-            Statement stmt = con.createStatement();
-
-            ResultSet rs = stmt.executeQuery("SELECT * FROM circuit");
-            circuitComboBox = new JComboBox();
-
-            while (rs.next()) {
-                // Ajoute les circuits
-                circuitComboBox.addItem(rs.getString(4));
-                ListCircuit.addCircuit(new Circuit(rs.getString(4), rs.getString(2), rs.getInt(3)));
-            }
-
-            ResultSet rs2 = stmt.executeQuery("SELECT * FROM `match` WHERE 1");
-            // Utilise un autre Statement pour avoir les circuits
-            Statement stmt2 = con.createStatement();
-            // Utilise un autre Statement pour avoir les adherents participant au match
-            Statement stmtAd = con.createStatement();
-
-            while (rs2.next()) {
-                // On recupere le circuit correspondant au circuit du match pour avoir son nom
-                ResultSet rsCircuit = stmt2.executeQuery("SELECT * FROM circuit WHERE idCircuit = " + rs2.getInt(8));
-                rsCircuit.next();
-                // Ajoute les matchs
-                planning.ajouterMatch(new Match(rs2.getString(2), rs2.getString(3), rs2.getString(4),
-                        ListCircuit.getCircuit(rsCircuit.getString(4)), rs2.getInt(5)));
-                // On recupere les adherents participant au match
-                ResultSet rsAd = stmtAd.executeQuery("SELECT idPersonne, nom, prenom FROM personne JOIN match_has_adherent ON match_has_adherent.Adherent_Personne_idPersonne = personne.idPersonne WHERE Match_idMatch = " + rs2.getInt(1));
-                while (rsAd.next()) {
-                    Adherent adherent = new Adherent(rsAd.getString(2), rsAd.getString(3), rsAd.getInt(1));
-                    // Ajoute les participants au match
-                    planning.getMatchs().get(planning.getMatchs().size() - 1).addParticipant(adherent);
-                    // Si c'est le gagnant du match, on l'ajoute au match
-                    if (rs2.getInt(6) == rsAd.getInt(1)) {
-                        planning.getMatchs().get(planning.getMatchs().size() - 1).setGagnant(adherent);
-                    }
-                }
-            }
-            // Ferme les Statement et les ResultSet
-            stmt.close();
-            stmt2.close();
-        } catch (Exception e) {
-            System.out.println(e);
+        // Creation du planning
+        planning = new Planning();
+        // Ajoute les circuits dans une comboBox
+        circuitComboBox = new JComboBox<String>();
+        for (Circuit circuit : ListCircuit.getInstance()) {
+            circuitComboBox.addItem(circuit.getName());
         }
 
         // Page d'insertion dans la bdd
@@ -179,52 +139,44 @@ public class Main implements ActionListener {
         }
 
         // Place les matchs du planning dans la liste
-        try {
-            // Tri les matchs avant
-            planning.sortPlanning();
-            // Recupere les infos de chaque match
-            for (Match m : planning.getMatchs()) {
-                String id = (planning.getMatchs().indexOf(m) + 1) + "";
-                String date = m.getDate();
-                String heureDebut = m.getHeureDeb();
-                String heureFin = m.getHeureFin();
-                String nbrPart = String.valueOf(m.getNbJoueursMax());
-                String circuit = m.getCircuit().getName();
-                String gagnant = m.getGagnant() != null ? m.getGagnant().getNom() + " " + m.getGagnant().getPrenom() : null;
+        // Tri les matchs avant
+        planning.sortPlanning();
+        // Recupere les infos de chaque match
+        for (Match m : planning.getMatchs()) {
+            String id = (planning.getMatchs().indexOf(m) + 1) + "";
+            String date = m.getDate();
+            String heureDebut = m.getHeureDeb();
+            String heureFin = m.getHeureFin();
+            String nbrPart = String.valueOf(m.getNbJoueursMax());
+            String circuit = m.getCircuit().getName();
+            String gagnant = m.getGagnant() != null ? m.getGagnant().getNom() + " " + m.getGagnant().getPrenom() : null;
 
-                final JButton JButtonId = new JButton(id);
-                JButtonId.addActionListener(this);
-                final JLabel JLabelDate = new JLabel(date, SwingConstants.CENTER);
-                final JLabel JLabelHeureDebut = new JLabel(heureDebut, SwingConstants.CENTER);
-                final JLabel JLabelHeureFin = new JLabel(heureFin, SwingConstants.CENTER);
-                final JLabel JLabelNbrPart = new JLabel(nbrPart, SwingConstants.CENTER);
-                final JLabel JLabelCircuit = new JLabel(circuit, SwingConstants.CENTER);
-                final JLabel JLabelGagnant = new JLabel(gagnant, SwingConstants.CENTER);
+            final JButton JButtonId = new JButton(id);
+            JButtonId.addActionListener(this);
+            final JLabel JLabelDate = new JLabel(date, SwingConstants.CENTER);
+            final JLabel JLabelHeureDebut = new JLabel(heureDebut, SwingConstants.CENTER);
+            final JLabel JLabelHeureFin = new JLabel(heureFin, SwingConstants.CENTER);
+            final JLabel JLabelNbrPart = new JLabel(nbrPart, SwingConstants.CENTER);
+            final JLabel JLabelCircuit = new JLabel(circuit, SwingConstants.CENTER);
+            final JLabel JLabelGagnant = new JLabel(gagnant, SwingConstants.CENTER);
 
-                JButtonId.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                JLabelDate.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                JLabelHeureDebut.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                JLabelHeureFin.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                JLabelNbrPart.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                JLabelCircuit.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                JLabelGagnant.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            JButtonId.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            JLabelDate.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            JLabelHeureDebut.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            JLabelHeureFin.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            JLabelNbrPart.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            JLabelCircuit.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            JLabelGagnant.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-                // Ajout a la liste
-                JPListeEvents.add(JButtonId);
-                JPListeEvents.add(JLabelDate);
-                JPListeEvents.add(JLabelHeureDebut);
-                JPListeEvents.add(JLabelHeureFin);
-                JPListeEvents.add(JLabelNbrPart);
-                JPListeEvents.add(JLabelCircuit);
-                JPListeEvents.add(JLabelGagnant);
-                JPListeEvents.setBorder(BorderFactory.createEmptyBorder(0, 30, 10, 30));
-            }
-
-            // On ferme la connexion
-            con.close();
-        } catch (SQLException e) {
-            // Gestion des erreurs
-            System.err.println("SQLException: " + e.getMessage());
+            // Ajout a la liste
+            JPListeEvents.add(JButtonId);
+            JPListeEvents.add(JLabelDate);
+            JPListeEvents.add(JLabelHeureDebut);
+            JPListeEvents.add(JLabelHeureFin);
+            JPListeEvents.add(JLabelNbrPart);
+            JPListeEvents.add(JLabelCircuit);
+            JPListeEvents.add(JLabelGagnant);
+            JPListeEvents.setBorder(BorderFactory.createEmptyBorder(0, 30, 10, 30));
         }
 
         JPButtons = new JPanel();
@@ -341,11 +293,13 @@ public class Main implements ActionListener {
                             ListCircuit.getCircuit(circuitComboBox.getSelectedItem().toString()),
                             Integer.parseInt(nbrPart.getText()));
 
-                    if (!checkReserv(tmp)) {
+                    // Vérification qu'aucune réservation n'existe déjà pour ces horaires
+                    if (!planning.checkReserv(tmp)) {
                         // Message d'erreur
                         confirmation.setText("Il y a déjà une réservation pour ce match");
                         return;
                     }
+
                     // Ajout du match dans le planning
                     planning.ajouterMatch(tmp);
                     // Message de confirmation
@@ -681,6 +635,9 @@ public class Main implements ActionListener {
         mainJFrame.repaint();
     }
 
+    /**
+     * Fonction servant a mettre la liste des reservations a jour
+     */
     public void refreshR() {
         try {
             con = DriverManager.getConnection(url, "root", "");
@@ -766,54 +723,6 @@ public class Main implements ActionListener {
             // Gestion des erreurs
             System.out.println("SQLException: " + ex.getMessage());
         }
-    }
-
-    /**
-     * Pour chaque reservation, on verifie qu'aucune ne chevauche pas le match
-     * @param m
-     * @return
-     */
-    public boolean checkReserv(Match m) {
-        try {
-            con = DriverManager.getConnection(url, "root", "");
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM reservation");
-
-            planning.ajouterMatch(m);
-
-            while (rs.next()) {
-                // On ne garde que les reservations dont autorisation est différent de 2
-                if (rs.getInt("autorisation") == 2) {
-                    continue;
-                }
-
-                String date = rs.getString("date");
-                String debut = rs.getString("heureDebut");
-                String fin = rs.getString("heureFin");
-                String circuit = rs.getString("Circuit_idCircuit");
-
-                // Recupere le nom du circuit
-                Statement stmt2 = con.createStatement();
-                ResultSet rs2 = stmt2.executeQuery("SELECT * FROM circuit WHERE idCircuit = " + circuit);
-                rs2.next();
-                String circuitName = rs2.getString("nom");
-
-                // On verifie que la reservation ne chevauche pas le match
-                if (!planning.verifierDispo(new Match(date, debut, fin, ListCircuit.getCircuit(circuitName), 0))) {
-                    planning.supprimerMatch(m);
-                    return false;
-                }
-            }
-        } catch (SQLException ex) {
-            // Gestion des erreurs
-            System.out.println("SQLException: " + ex.getMessage());
-        } catch (WrongTimeException e) {
-            System.out.println("Erreur : " + e.getMessage());
-        } catch (CircuitExistException e2) {
-            System.out.println("Erreur : " + e2.getMessage());
-        }
-        planning.supprimerMatch(m);
-        return true;
     }
 
     public static void main(String[] args) throws SQLException {

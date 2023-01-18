@@ -1,23 +1,72 @@
 package javaPlanning;
 
+import java.sql.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import javaPlanning.exceptions.CircuitExistException;
 import javaPlanning.exceptions.WrongTimeException;
 
 public class Planning {
 
-    // TODO : Trier liste par date et heure
     private ArrayList<Match> matchs;
+    private String url = "jdbc:mysql://localhost:3306/bdsae";
 
     /**
      * Constructeur de la classe Planning
      * Initialise la liste des matchs
+     * Récupère ensuite dans la base de données les matchs déjà présents
      */
     public Planning() {
         this.matchs = new ArrayList<Match>();
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection(url, "root", "");
+            Statement stmt = con.createStatement();
+
+            // Récupère les circuits
+            ResultSet rs = stmt.executeQuery("SELECT * FROM circuit");
+
+            while (rs.next()) {
+                // Ajoute les circuits
+                ListCircuit.addCircuit(new Circuit(rs.getString("nom"), rs.getString("adresse"), rs.getInt("nbrMaxPlace")));
+            }
+
+            ResultSet rs2 = stmt.executeQuery("SELECT * FROM `match` WHERE 1");
+            // Utilise un autre Statement pour avoir les circuits
+            Statement stmt2 = con.createStatement();
+            // Utilise un autre Statement pour avoir les adherents participant au match
+            Statement stmtAd = con.createStatement();
+
+            while (rs2.next()) {
+                // On recupere le circuit correspondant au circuit du match pour avoir son nom
+                ResultSet rsCircuit = stmt2.executeQuery("SELECT * FROM circuit WHERE idCircuit = " + rs2.getInt(8));
+                rsCircuit.next();
+                // Ajoute les matchs
+                this.ajouterMatch(new Match(rs2.getString(2), rs2.getString(3), rs2.getString(4),
+                        ListCircuit.getCircuit(rsCircuit.getString(4)), rs2.getInt(5)));
+                // On recupere les adherents participant au match
+                ResultSet rsAd = stmtAd.executeQuery("SELECT idPersonne, nom, prenom FROM personne JOIN match_has_adherent ON match_has_adherent.Adherent_Personne_idPersonne = personne.idPersonne WHERE Match_idMatch = " + rs2.getInt(1));
+                while (rsAd.next()) {
+                    Adherent adherent = new Adherent(rsAd.getString(2), rsAd.getString(3), rsAd.getInt(1));
+                    // Ajoute les participants au match
+                    this.getMatchs().get(this.getMatchs().size() - 1).addParticipant(adherent);
+                    // Si c'est le gagnant du match, on l'ajoute au match
+                    if (rs2.getInt(6) == rsAd.getInt(1)) {
+                        this.getMatchs().get(this.getMatchs().size() - 1).setGagnant(adherent);
+                    }
+                }
+            }
+            // Ferme les Statement et les ResultSet
+            stmt.close();
+            stmt2.close();
+            con.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     /**
@@ -156,8 +205,62 @@ public class Planning {
         });
     }
 
+    /**
+     * Renvoie la liste entière des matchs présent dans le planning
+     * @return ArrayList des matchs
+     */
     public ArrayList<Match> getMatchs() {
         return matchs;
     }
 
+    /**
+     * Pour chaque reservation, on verifie qu'aucune ne chevauche pas le match
+     * @param m
+     * @return
+     */
+    public boolean checkReserv(Match m) {
+        try {
+            Connection con = DriverManager.getConnection(url, "root", "");
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM reservation");
+
+            // Ajoute le match temporairement au planning
+            this.ajouterMatch(m);
+
+            while (rs.next()) {
+                // On ne garde que les reservations dont autorisation est différent de 2
+                if (rs.getInt("autorisation") == 2) {
+                    continue;
+                }
+
+                String date = rs.getString("date");
+                String debut = rs.getString("heureDebut");
+                String fin = rs.getString("heureFin");
+                String circuit = rs.getString("Circuit_idCircuit");
+
+                // Recupere le nom du circuit
+                Statement stmt2 = con.createStatement();
+                ResultSet rs2 = stmt2.executeQuery("SELECT * FROM circuit WHERE idCircuit = " + circuit);
+                rs2.next();
+                String circuitName = rs2.getString("nom");
+
+                // On verifie que la reservation ne chevauche pas le match
+                // Si oui, on supprime le match du planning et on renvoi false
+                if (!this.verifierDispo(new Match(date, debut, fin, ListCircuit.getCircuit(circuitName), 0))) {
+                    this.supprimerMatch(m);
+                    return false;
+                }
+            }
+        } catch (SQLException ex) {
+            // Gestion des erreurs
+            System.out.println("SQLException: " + ex.getMessage());
+        } catch (WrongTimeException e) {
+            System.out.println("Erreur : " + e.getMessage());
+        } catch (CircuitExistException e2) {
+            System.out.println("Erreur : " + e2.getMessage());
+        }
+        // Si aucun chevauchement n'a été trouvé, on supprime le match du planning et on renvoi true
+        this.supprimerMatch(m);
+        return true;
+    }
 }
