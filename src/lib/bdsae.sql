@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mer. 18 jan. 2023 à 10:27
+-- Généré le : mer. 18 jan. 2023 à 19:58
 -- Version du serveur : 5.7.31
 -- Version de PHP : 8.0.6
 
@@ -92,10 +92,11 @@ INSERT INTO `adherent` (`derniereVisite`, `niveauPratique`, `photo`, `Personne_i
 (NULL, NULL, NULL, 48),
 (NULL, NULL, NULL, 49),
 (NULL, NULL, NULL, 50),
-('2023-01-18', 'Professionnel', NULL, 51),
+('2023-01-18', 'Intermédiaire', NULL, 51),
 ('2023-01-18', 'Confirmé', NULL, 52),
 (NULL, NULL, NULL, 53),
-(NULL, NULL, NULL, 54);
+(NULL, NULL, NULL, 54),
+('2023-01-18', NULL, NULL, 68);
 
 -- --------------------------------------------------------
 
@@ -115,7 +116,6 @@ CREATE TABLE IF NOT EXISTS `admin` (
 --
 
 INSERT INTO `admin` (`Personne_idPersonne`) VALUES
-(36),
 (51);
 
 -- --------------------------------------------------------
@@ -187,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `match` (
   PRIMARY KEY (`idMatch`),
   KEY `fk_Match_Circuit1_idx` (`Circuit_idCircuit`),
   KEY `fk_Match_Adherent2_idx` (`Gagnant`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `match`
@@ -196,10 +196,10 @@ CREATE TABLE IF NOT EXISTS `match` (
 INSERT INTO `match` (`idMatch`, `date`, `heureDebut`, `heureFin`, `nbrPartNecessaire`, `Gagnant`, `resultatFinal`, `Circuit_idCircuit`) VALUES
 (1, '2023-01-20', '13:00:00', '15:00:00', 20, NULL, NULL, 3),
 (2, '2023-01-20', '13:00:00', '15:00:00', 20, NULL, NULL, 4),
-(3, '2023-01-21', '20:00:00', '21:00:00', 20, NULL, NULL, 4),
 (5, '2023-01-21', '19:59:00', '22:00:00', 2, NULL, NULL, 3),
 (7, '2022-12-12', '15:00:00', '18:00:00', 12, NULL, NULL, 3),
-(8, '2024-01-01', '12:00:00', '22:00:00', 30, NULL, NULL, 3);
+(8, '2024-01-05', '16:00:00', '22:00:00', 30, NULL, NULL, 3),
+(9, '2026-12-12', '12:00:00', '13:00:00', 23, NULL, NULL, 3);
 
 -- --------------------------------------------------------
 
@@ -221,10 +221,11 @@ CREATE TABLE IF NOT EXISTS `match_has_adherent` (
 --
 
 INSERT INTO `match_has_adherent` (`Match_idMatch`, `Adherent_Personne_idPersonne`) VALUES
+(7, 12),
+(7, 15),
 (1, 51),
-(3, 51),
-(2, 52),
-(3, 52);
+(5, 51),
+(2, 52);
 
 -- --------------------------------------------------------
 
@@ -242,7 +243,7 @@ CREATE TABLE IF NOT EXISTS `personne` (
   `mail` varchar(45) NOT NULL,
   `mdp` varchar(255) NOT NULL,
   PRIMARY KEY (`idPersonne`)
-) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `personne`
@@ -302,7 +303,8 @@ INSERT INTO `personne` (`idPersonne`, `nom`, `prenom`, `adresse`, `telephone`, `
 (51, 'Rouillon', 'Tom', '16 rue des Lisières du Kemberg', '0329888888', 'tom.rouillon88@gmail.com', '$2y$10$hVAexbK7YhlN3N/2BSjGXuRzA6V4Njs1QEYv1BxthTmYV4DdxbiHO'),
 (52, 'Grégory', 'Wittmann', 'feur', '0329888888', 'feur@feur.com', '$2y$10$90WMvvhZjdq.EnJZ3vvaXOg9rx23rcDSxd8ee1tBSS4qeLBaX01VO'),
 (53, 'Castex', 'Jean', 'Matignon', '0767654345', 'jeanCastex@bebou.com', '$2y$10$B.MMMo9AobIrwafhu9h9aObOx3YFUCydETytWwl0txAE/5qRl8nqS'),
-(54, 'Michel', 'Polnareff', 'Feur', '0767654345', 'a@a.com', '$2y$10$r.i4NtWqQtJpMzpFdDQBrOtei1yxJ19orpH/2G0wlxjKnJYDQ88mq');
+(54, 'Michel', 'Polnareff', 'Feur', '0767654345', 'a@a.com', '$2y$10$r.i4NtWqQtJpMzpFdDQBrOtei1yxJ19orpH/2G0wlxjKnJYDQ88mq'),
+(68, 'azer', 'azer', 'zer', '0669696969', 'bc@bc.com', '$2y$10$qgK9ok7WbEp1mvPr6rsR/OllwJ/MukvKyCIvhDQnsLdRumVBYRPqy');
 
 -- --------------------------------------------------------
 

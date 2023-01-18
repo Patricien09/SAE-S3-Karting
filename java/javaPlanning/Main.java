@@ -25,6 +25,8 @@ public class Main implements ActionListener {
 
     // Cree les instances necessaires a la connexion a la bdd
     String url = "jdbc:mysql://localhost:3306/bdsae";
+    String user = "root";
+    String pass = "";
     Connection con;
 
     // Objets pour le planning, récupère en même temps les matchs de la bdd
@@ -277,7 +279,7 @@ public class Main implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         try {
-            con = DriverManager.getConnection(url, "root", "");
+            con = DriverManager.getConnection(url, user, pass);
         } catch (Exception ex) {
             System.out.println("Erreur de connexion");
         }
@@ -670,7 +672,7 @@ public class Main implements ActionListener {
      */
     public void refreshR() {
         try {
-            con = DriverManager.getConnection(url, "root", "");
+            con = DriverManager.getConnection(url, user, pass);
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM reservation");
             // Si autorisation est a 0, cela veut dire que l'admin n'a pas encore repondu
