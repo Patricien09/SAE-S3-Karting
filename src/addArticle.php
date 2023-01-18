@@ -16,6 +16,12 @@ if (isset($_POST['title']) && isset($_POST['content'])) {
     <?php
 }
 
+if (isset($_POST["idArticle"])) {
+    $bdd = connect_bd();
+    $req = $bdd->prepare('DELETE FROM article WHERE idArticle = ?');
+    $req->execute(array($_POST["idArticle"]));
+}
+
 ?>
 
 <div id="contenu">

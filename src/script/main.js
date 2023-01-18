@@ -129,3 +129,29 @@ function cancelRes(idRes) {
         });
     }
 }
+
+function deleteArticle(id) {
+    if (confirm("Voulez-vous vraiment supprimer cet article ?")) {
+        $.ajax({
+            url: "addArticle.php",
+            dataType: "html",
+            type: "POST",
+            data: {
+                idArticle: id
+            },
+            success: function(data) {
+                if (data == "Réussie")
+                    $("#deleteErr" + id).html("Suppression réussie");
+                else if (data == "Erreur")
+                    $("#deleteErr" + id).html("Erreur");
+                // Reload the page
+                setTimeout(function() {
+                    window.location.replace("actu.php");
+                }, 1000);
+            },
+            error: function(data) {
+                alert("Dommage");
+            }
+        });
+    }
+}

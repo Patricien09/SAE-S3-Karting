@@ -154,7 +154,8 @@ public class Planning {
                     || (timeDeb.equals(timeDeb2) && timeFin.isBefore(timeFin2))
                     || (timeDeb.isAfter(timeDeb2) && timeFin.equals(timeFin2))
                     || (timeDeb.isBefore(timeDeb2) && timeFin.isAfter(timeFin2))
-                    || (timeDeb.equals(timeDeb2) && timeFin.isAfter(timeFin2))) {
+                    || (timeDeb.equals(timeDeb2) && timeFin.isAfter(timeFin2))
+                    || timeDeb.equals(timeDeb2) || timeFin.equals(timeFin2)) {
                 return false;
             }
         }

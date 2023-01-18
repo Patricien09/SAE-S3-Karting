@@ -84,7 +84,7 @@ function infoUtilisateur()
                             // Permet de le renseigner avec un formulaire
                             ?>
                             <p>Non renseigné</p>
-                            <form action="updateNiveau.php" method="post" id="niveauForm">
+                            <form action="updateNiveau.php" method="post" id="niveauForm" onsubmit="return confirm('Etes-vous sûr ? Cette action est irréversible');">
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <select name="niveau" id="niveau">

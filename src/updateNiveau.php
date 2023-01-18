@@ -27,7 +27,7 @@ if (isset($_POST["niveau"])) {
         if ($stmt->rowCount() == 0) {
             echo "Erreur de connexion";
         } else {
-            header("Location: ../profil.php");
+            header("Location: profil.php");
         }
     }
 }

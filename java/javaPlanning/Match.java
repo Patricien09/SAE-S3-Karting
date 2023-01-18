@@ -50,6 +50,10 @@ public class Match {
         if (!checkDateFormat(date)) {
             throw new IllegalArgumentException("Le format de la date est incorrect");
         }
+
+        if (circuit.getNbrMaxPlace() < nbrJoueursMax) {
+            throw new IllegalArgumentException("Le nombre de joueurs max est superieur au nombre de places du circuit");
+        }
         
         this.date = date;
         this.heureDeb = heureDeb;

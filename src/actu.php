@@ -13,6 +13,11 @@
         $req->execute(array($id));
         $donnees = $req->fetch();
 
+        if (!$donnees) {
+            echo "<h1>Erreur : Cet article n'existe pas</h1>";
+            exit();
+        }
+
         ?>
 
         <div class="article">
@@ -28,7 +33,13 @@
             <div class="bodyArticle">
                 <p><?php echo $donnees['contenu']; ?></p>
             </div>
+            <?php if (isset($_SESSION['admin']) && $_SESSION['admin']) {
+                echo "<button onclick='deleteArticle(" . $donnees['idArticle'] . ")' class='registerMatch unreg'>Supprimer l'article</button>";
+                echo "<small id='deleteErr'></small>";
+            }
+            ?>
         </div>
+
 
         <?php
     }
